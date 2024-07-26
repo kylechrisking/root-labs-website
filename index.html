@@ -12,9 +12,10 @@
 <body>
   <header>
     <nav id="mainNav">
+      <div class="logo">Root Labs</div>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About Us</a></li>
+        <li><a href="about.html">About</a></li>
         <li><a href="services.html">Services</a></li>
         <li><a href="projects.html">Projects</a></li>
         <li><a href="contact.html">Contact</a></li>
@@ -23,11 +24,11 @@
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero home-hero">
       <div class="hero-content">
-        <h1><span>Root</span> <span>Labs</span></h1>
-        <p>Innovative IT Solutions for the Modern World</p>
-        <a href="contact.html" class="cta-button">Work with Us</a>
+        <h1>Innovative IT Solutions for the <span>Modern World</span></h1>
+        <p>Web Development | 3D Printing | Cybersecurity | Software Development</p>
+        <a href="contact.html" class="cta-button">Get Started</a>
       </div>
     </section>
 
@@ -57,40 +58,29 @@
       </div>
     </section>
 
-    <section id="our-projects" class="content-section">
+    <section id="featured-projects" class="content-section">
       <h2 class="section-title">Featured Projects</h2>
-      <div class="carousel-container">
-        <div class="carousel">
-          <div class="carousel-item">
-            <img src="images/project1.jpg" alt="Web Development Project">
-            <div class="project-info">
-              <h3>E-commerce Platform</h3>
-              <p>A scalable online store with advanced features and secure payment integration</p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="images/3dprinting.jpg" alt="3D Printing Project">
-            <div class="project-info">
-              <h3>Custom Medical Devices</h3>
-              <p>3D printed prosthetics and medical tools for improved patient care</p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="images/project2.jpg" alt="Cybersecurity Project">
-            <div class="project-info">
-              <h3>Network Security Overhaul</h3>
-              <p>Comprehensive security upgrade for a large corporate network</p>
-            </div>
-          </div>
+      <div class="project-grid">
+        <div class="project-item">
+          <img src="images/project1.jpg" alt="E-commerce Platform">
+          <h3>E-commerce Platform</h3>
+          <p>Scalable online store with advanced features</p>
         </div>
-        <button class="carousel-button prev">&lt;</button>
-        <button class="carousel-button next">&gt;</button>
+        <div class="project-item">
+          <img src="images/3dprinting.jpg" alt="Custom Medical Devices">
+          <h3>Custom Medical Devices</h3>
+          <p>3D printed prosthetics and medical tools</p>
+        </div>
+        <div class="project-item">
+          <img src="images/project2.jpg" alt="Network Security Overhaul">
+          <h3>Network Security Overhaul</h3>
+          <p>Comprehensive security upgrade for corporate networks</p>
+        </div>
       </div>
-      <div class="carousel-indicators"></div>
     </section>
 
     <section id="testimonials" class="content-section">
-      <h2 class="section-title">What Our Clients Say</h2>
+      <h2 class="section-title">Client Testimonials</h2>
       <div class="testimonial-container">
         <div class="testimonial">
           <p>"Root Labs transformed our online presence with a stunning website that perfectly captures our brand."</p>
@@ -105,29 +95,35 @@
 
     <section class="cta-section">
       <h2>Ready to bring your ideas to life?</h2>
-      <p>Let's collaborate on your next project and create something amazing together.</p>
       <a href="contact.html" class="cta-button">Work with Us</a>
     </section>
   </main>
 
   <footer>
     <div class="footer-content">
-      <div class="footer-info">
-        <h3>Root Labs</h3>
-        <div class="footer-about">
-          <p>Two IT pros with 10+ years of combined experience. We specialize in web & software development, 3D printing & design, networking, and cybersecurity.</p>
+        <div class="footer-info">
+            <h3>Root Labs</h3>
+            <p class="footer-about">Web & software development, 3D printing & design, networking, and cybersecurity.</p>
+            <div class="footer-contact">
+                <p>Email: <a href="mailto:help@rootlabs.com">help@rootlabs.com</a></p>
+            </div>
+            <div class="social-icons">
+                <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            </div>
         </div>
-        <div class="footer-contact">
-          <p>Email: <a href="mailto:help@rootlabs.com">help@rootlabs.com</a></p>
+        <div class="footer-map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3437.1751349614807!2d-77.41812548492876!3d37.54398813339467!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b1116bb67fd823%3A0x3b99c72369a2d963!2s1717%20E%20Cary%20St%2C%20Richmond%2C%20VA%2023223!5e0!3m2!1sen!2sus!4v1679590070907!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
-        <div class="footer-creators">
-          <p>Founded by James Samford and Kyle King</p>
-        </div>
-      </div>
-      <div class="footer-map">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100940.14245968236!2d-87.62579146947!3d37.97467371722881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x886ca37b9da4a7b9%3A0x26ea92b7c0c6a6a6!2sEvansville%2C%20IN!5e0!3m2!1sen!2sus!4v1651234567890!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
-      </div>
     </div>
-  </footer>
+    <div class="footer-creators">
+        <p>Founded by James Samford and Kyle King</p>
+    </div>
+</footer>
+
+  <!-- Add this at the end of your body tag -->
+  <button id="back-to-top" title="Back to Top">↑</button>
 </body>
 </html>

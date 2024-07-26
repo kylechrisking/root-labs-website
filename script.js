@@ -137,3 +137,108 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Smooth Scrolling and Parallax Effects
+const parallaxSections = document.querySelectorAll('.parallax-section');
+
+parallaxSections.forEach(section => {
+  const parallaxBg = section.querySelector('.parallax-bg');
+  const content = section.querySelector('.content');
+
+  section.addEventListener('scroll', () => {
+    const scrollPosition = section.scrollTop;
+    parallaxBg.style.transform = `translateY(${scrollPosition * 0.5}px)`;
+    content.style.transform = `translateY(${scrollPosition * -0.5}px)`;
+  });
+});
+
+// Animated SVG Logo
+const animatedLogo = document.getElementById('animated-logo');
+
+if (animatedLogo) {
+  const paths = animatedLogo.querySelectorAll('path');
+  paths.forEach(path => {
+    path.style.strokeDasharray = path.getTotalLength();
+    path.style.strokeDashoffset = path.getTotalLength();
+    path.style.animation = 'draw 2s linear forwards';
+  });
+}
+
+// Animated Section Transitions
+const animatedSections = document.querySelectorAll('.animate-on-scroll');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('animate');
+    }
+  });
+}, { threshold: 0.1 });
+
+animatedSections.forEach(section => {
+  observer.observe(section);
+});
+
+// Particle Background
+particlesJS('particles-js', {
+  particles: {
+    number: { value: 80, density: { enable: true, value_area: 800 } },
+    color: { value: "#ffffff" },
+    shape: { type: "circle" },
+    opacity: { value: 0.5, random: false },
+    size: { value: 3, random: true },
+    line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.4, width: 1 },
+    move: { enable: true, speed: 6, direction: "none", random: false, straight: false, out_mode: "out", bounce: false }
+  },
+  interactivity: {
+    detect_on: "canvas",
+    events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+    modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } }
+  },
+  retina_detect: true
+});
+
+// Animated Call-to-Action Buttons
+const ctaButtons = document.querySelectorAll('.cta-button');
+
+ctaButtons.forEach(button => {
+  const buttonBefore = button.querySelector(':before');
+  button.addEventListener('hover', () => {
+    buttonBefore.style.left = '100%';
+  });
+});
+
+// Animated Counters
+const counters = document.querySelectorAll('.counter');
+
+counters.forEach(counter => {
+  const updateCount = () => {
+    const target = +counter.getAttribute('data-target');
+    const count = +counter.innerText;
+    const increment = target / 200;
+
+    if (count < target) {
+      counter.innerText = Math.ceil(count + increment);
+      setTimeout(updateCount, 1);
+    } else {
+      counter.innerText = target;
+    }
+  };
+  updateCount();
+});
+
+// Add this to your existing script.js file
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("back-to-top").style.display = "block";
+  } else {
+    document.getElementById("back-to-top").style.display = "none";
+  }
+}
+
+document.getElementById("back-to-top").onclick = function() {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
