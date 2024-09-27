@@ -8,7 +8,9 @@
             "type": "chrome",
             "request": "launch",
             "name": "Open index.html",
-            "file": "/home/kyle/root-labs-website/index.html"
+            "file": "F:/root-labs-website/index.html"
+            /// swap to F:/root-labs-website/index.html on windows
+            /// swap to /home/kyle/root-labs-website/index.html on linux 
         }
     ]
 }

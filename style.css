@@ -5,6 +5,7 @@
   box-sizing: border-box;
 }
 
+/* Global styles for html and body */
 html,
 body {
   width: 100%;
@@ -21,6 +22,7 @@ body {
   background-color: var(--background-color);
 }
 
+/* CSS Variables for color themes */
 :root {
   --primary-color: #2c3e50;
   --secondary-color: #3498db;
@@ -29,7 +31,7 @@ body {
   --accent-color: #e74c3c;
 }
 
-/* Header and navigation styles */
+/* Header and navigation styles (affects all pages) */
 header {
   background-color: var(--primary-color);
   padding: 1rem 0;
@@ -86,7 +88,7 @@ header {
   width: 100%;
 }
 
-/* Hero section styles */
+/* Hero section styles (affects home, services, projects, about, contact pages) */
 .hero {
   background-size: cover;
   background-position: center;
@@ -123,7 +125,7 @@ header {
   font-size: 1.2rem;
 }
 
-/* Specific hero styles */
+/* Specific hero styles for different pages */
 .services-hero {
   background-image: url('images/root-labs-stock-image.jpg');
 }
@@ -144,6 +146,7 @@ header {
   background-image: url('images/root-labs-stock-image.jpg');
 }
 
+/* Call to Action button styles */
 .cta-button {
   display: inline-block;
   background-color: var(--accent-color);
@@ -159,7 +162,7 @@ header {
   background-color: #c0392b;
 }
 
-/* Content section styles */
+/* Content section styles (affects all pages) */
 .content-section {
   max-width: 1200px;
   margin: 0 auto;
@@ -176,17 +179,26 @@ header {
   margin-bottom: 3rem;
 }
 
-/* Services section styles */
-.services-grid {
-  display: grid;
+/* Index page services grid styles */
+.index-services-grid {
+  display: flex; /* Use flexbox for horizontal alignment */
+  justify-content: space-around; /* Space items evenly */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 20px; /* Space between items */
+}
+
+/* Services page grid styles */
+.services-page-grid {
+  display: grid; /* Use grid layout */
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
 }
 
+/* Service item styles (affects services section) */
 .service-item {
   background-color: var(--background-light);
   padding: 2rem;
-  border-radius: 10px;
+  border-radius: 10px; /* Rounded edges for service items */
   text-align: center;
   transition: transform 0.3s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -261,7 +273,7 @@ header {
   margin-left: 5px;
 }
 
-/* Testimonial section styles */
+/* Testimonial section styles (affects testimonials section) */
 .testimonial-container {
   display: flex;
   flex-wrap: wrap;
@@ -304,22 +316,7 @@ header {
   margin-bottom: 2rem;
 }
 
-.cta-button {
-  display: inline-block;
-  background-color: var(--accent-color);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-.cta-button:hover {
-  background-color: var(--root-brown);
-}
-
-/* Footer styles */
+/* Footer styles (affects all pages) */
 footer {
   background-color: var(--primary-color);
   color: white;
@@ -368,6 +365,7 @@ footer {
   color: rgba(255, 255, 255, 0.6);
 }
 
+/* Media queries for responsive design */
 @media (max-width: 768px) {
   .footer-content {
     flex-direction: column;
@@ -376,28 +374,7 @@ footer {
   .footer-map {
     margin-top: 2rem;
   }
-}
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .footer-content {
-    flex-direction: column;
-  }
-
-  .footer-info,
-  .footer-map {
-    margin-right: 0;
-    margin-bottom: 20px;
-  }
-
-  .footer-map {
-    max-width: 100%;
-    /* Allow full width on small screens */
-  }
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
   .hero h1 {
     font-size: 3rem;
   }
@@ -408,10 +385,6 @@ footer {
 
   .section-title {
     font-size: 2rem;
-  }
-
-  .footer-content {
-    flex-direction: column;
   }
 
   .footer-info,
@@ -508,6 +481,7 @@ footer {
     line-height: 1.6;
 }
 
+/* Team section styles (affects about page) */
 .team-section {
     background-color: white;
     padding: 4rem 0;
@@ -586,6 +560,7 @@ footer {
     }
 }
 
+/* Contact form styles (affects contact page) */
 .contact-form textarea {
   resize: vertical;
 }
@@ -612,6 +587,7 @@ footer {
   }
 }
 
+/* Social icons styles (affects contact page) */
 .social-icons {
   margin-top: 1rem;
 }
@@ -693,6 +669,7 @@ footer {
     color: var(--secondary-color);
 }
 
+/* Form group styles (affects contact page) */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -726,6 +703,7 @@ footer {
     resize: vertical;
 }
 
+/* Submit button styles (affects contact page) */
 .submit-btn {
     background-color: var(--secondary-color);
     color: white;
@@ -746,4 +724,220 @@ footer {
     .contact-content .container {
         flex-direction: column;
     }
+}
+
+/* Services Section Styles (affects services page) */
+#our-services .services-grid {
+  display: flex; /* Use flexbox for horizontal alignment */
+  justify-content: space-between; /* Space items evenly */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 20px; /* Space between items */
+}
+
+.service-item {
+  display: flex; /* Use flexbox for alignment */
+  flex-direction: column; /* Stack items vertically */
+  justify-content: space-between; /* Space items evenly */
+  height: 100%; /* Ensure the service item takes full height */
+  background-color: var(--background-light);
+  padding: 2rem;
+  border-radius: 10px; /* Rounded edges for service items */
+  text-align: center;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex: 1 1 200px; /* Allow items to grow and shrink */
+  max-width: 250px; /* Set a max width for uniformity */
+}
+
+.service-item i {
+  font-size: 3rem; /* Icon size */
+  color: var(--labs-green); /* Icon color */
+  margin-bottom: 1rem; /* Space below the icon */
+}
+
+.service-item h3 {
+  font-size: 1.5rem; /* Title size */
+  margin-bottom: 0.5rem; /* Space below the title */
+  color: var(--root-brown); /* Title color */
+}
+
+.service-item p {
+  font-size: 1rem; /* Description size */
+  margin-bottom: auto; /* Push the button to the bottom */
+}
+
+/* Button styles */
+.service-button {
+  display: inline-block;
+  padding: 12px 24px; /* Adjust padding for a larger button */
+  background-color: #007BFF; /* Change to your theme color */
+  color: white;
+  text-decoration: none;
+  border-radius: 5px; /* Rounded edges */
+  transition: background-color 0.3s;
+}
+
+.service-button:hover {
+  background-color: #0056b3; /* Darker shade for hover effect */
+}
+
+/* Testimonial section styles (affects testimonials section) */
+.testimonial-rating {
+  color: #FFD700; /* Gold color for stars */
+  margin-top: 5px; /* Space above the rating */
+}
+
+.testimonial-rating i {
+  margin: 0 2px; /* Space between stars */
+}
+
+
+/* Reset default margins and paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global styles for html and body */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Services Section Styles for services.html */
+.services-page {
+  width: 100%; /* Ensure the section takes full width */
+  padding: 0; /* Remove padding to allow full width */
+  text-align: center; /* Center align section title */
+}
+
+.service-item-services {
+  background-color: var(--background-light);
+  padding: 2rem;
+  border-radius: 10px; /* Rounded edges for service items */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  width: 100%; /* Ensure full width */
+  text-align: center; /* Center text within the service item */
+  border-bottom: 1px solid #ddd; /* Optional: Add a bottom border for separation */
+}
+
+.service-item-services:last-child {
+  border-bottom: none; /* Remove border from the last item */
+}
+
+.service-item-services i {
+  font-size: 3rem; /* Icon size */
+  color: var(--labs-green); /* Icon color */
+  margin-bottom: 1rem; /* Space below the icon */
+}
+
+.service-item-services h3 {
+  font-size: 1.5rem; /* Title size */
+  margin-bottom: 0.5rem; /* Space below the title */
+  color: var(--root-brown); /* Title color */
+}
+
+.service-item-services p {
+  font-size: 1rem; /* Description size */
+  margin: 0; /* Reset margin */
+}
+/* Project Details Styles for ecom_project.html */
+.project-details {
+  max-width: 800px; /* Limit the width for better readability */
+  margin: 2rem auto; /* Center the section with margin */
+  padding: 2rem; /* Add padding for spacing */
+  background-color: var(--background-color); /* Use the background color variable */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.project-details h1 {
+  font-size: 2.5rem; /* Title size */
+  color: var(--primary-color); /* Use primary color for the title */
+  margin-bottom: 1rem; /* Space below the title */
+  text-align: center; /* Center the title */
+}
+
+.project-details p {
+  font-size: 1.1rem; /* Description size */
+  line-height: 1.6; /* Line height for readability */
+  margin-bottom: 1rem; /* Space below paragraphs */
+}
+
+.project-details ul {
+  list-style-type: disc; /* Use disc for list items */
+  margin-left: 2rem; /* Indent the list */
+  margin-bottom: 1rem; /* Space below the list */
+}
+
+.project-details .back-button {
+  display: inline-block; /* Make it a block for padding */
+  margin-top: 1rem; /* Space above the button */
+  padding: 0.75rem 1.5rem; /* Button padding */
+  background-color: var(--secondary-color); /* Button color */
+  color: white; /* Text color */
+  text-decoration: none; /* Remove underline */
+  border-radius: 5px; /* Rounded edges */
+  transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+.project-details .back-button:hover {
+  background-color: #2980b9; /* Darker shade on hover */
+}
+
+/* Project Details Styles for network_project.html */
+.project-details {
+  max-width: 800px; /* Limit the width for better readability */
+  margin: 2rem auto; /* Center the section with margin */
+  padding: 2rem; /* Add padding for spacing */
+  background-color: var(--background-color); /* Use the background color variable */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.project-details h1 {
+  font-size: 2.5rem; /* Title size */
+  color: var(--primary-color); /* Use primary color for the title */
+  margin-bottom: 1rem; /* Space below the title */
+  text-align: center; /* Center the title */
+}
+
+.project-details h2 {
+  font-size: 1.8rem; /* Subheading size */
+  color: var(--primary-color); /* Use primary color for subheadings */
+  margin-top: 1.5rem; /* Space above subheadings */
+  margin-bottom: 1rem; /* Space below subheadings */
+}
+
+.project-details p {
+  font-size: 1.1rem; /* Description size */
+  line-height: 1.6; /* Line height for readability */
+  margin-bottom: 1rem; /* Space below paragraphs */
+}
+
+.project-details ul {
+  list-style-type: disc; /* Use disc for list items */
+  margin-left: 2rem; /* Indent the list */
+  margin-bottom: 1rem; /* Space below the list */
+}
+
+.project-details .back-button {
+  display: inline-block; /* Make it a block for padding */
+  margin-top: 1rem; /* Space above the button */
+  padding: 0.75rem 1.5rem; /* Button padding */
+  background-color: var(--secondary-color); /* Button color */
+  color: white; /* Text color */
+  text-decoration: none; /* Remove underline */
+  border-radius: 5px; /* Rounded edges */
+  transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+.project-details .back-button:hover {
+  background-color: #2980b9; /* Darker shade on hover */
 }
