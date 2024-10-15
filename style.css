@@ -353,7 +353,17 @@ footer {
 }
 
 .footer-map {
-  height: 200px;
+  height: 200px; /* Set a fixed height for the map */
+  max-width: 300px; /* Set a maximum width for the map */
+  width: 100%; /* Make the map container full width */
+  overflow: hidden; /* Hide any overflow */
+  margin: 0 auto; /* Center the map in the footer */
+}
+
+.footer-map iframe {
+  width: 100%; /* Make the iframe take the full width of the container */
+  height: 100%; /* Make the iframe take the full height of the container */
+  border: 0; /* Remove the border */
 }
 
 .footer-creators {

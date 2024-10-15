@@ -1,4 +1,23 @@
 <?php
+// Redirect to the error page for now, see below for more info
+header("Location: error.html");
+exit(); // Ensure no further code is executed to prevent complications
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--restore me once php is configured
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
     $name = htmlspecialchars($_POST['name']);
@@ -24,11 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Redirect to a thank you page or display a success message
         echo "Thank you for contacting us, $name. We will get back to you soon!";
     } else {
-        echo "Oops! Something went wrong, and we couldn't send your message.";
+        // Redirect to the error page
+        header("Location: error.html");
+        exit(); // Ensure no further code is executed
     }
 } else {
     // Not a POST request
-    echo "Invalid request.";
+    header("Location: error.html");
+    exit(); // Ensure no further code is executed
 }
-?>
-
+-->
