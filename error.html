@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Root Labs</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            background-color: #f5f5f5; /* Light background color */
+            font-family: 'Arial', sans-serif; /* Font style */
+            color: #333; /* Text color */
+            text-align: center; /* Center text */
+        }
+
+        .error-container {
+            background-color: white; /* White background for the error box */
+            padding: 2rem; /* Padding around the content */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            max-width: 400px; /* Maximum width for the container */
+            width: 90%; /* Responsive width */
+        }
+
+        h1 {
+            font-size: 3rem; /* Larger font size for "Oops!" */
+            color: #e74c3c; /* Accent color for the heading */
+            margin-bottom: 1rem; /* Space below the heading */
+        }
+
+        p {
+            font-size: 1.2rem; /* Font size for the message */
+            margin-bottom: 1.5rem; /* Space below the paragraph */
+        }
+
+        .cta-button {
+            display: inline-block; /* Make it a block for padding */
+            background-color: #3498db; /* Button color */
+            color: white; /* Text color */
+            padding: 0.75rem 1.5rem; /* Button padding */
+            text-decoration: none; /* Remove underline */
+            border-radius: 4px; /* Rounded edges */
+            transition: background-color 0.3s; /* Transition for hover effect */
+        }
+
+        .cta-button:hover {
+            background-color: #2980b9; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Oops!</h1>
+        <p>It seems there was an error sending your message. Our mail server is not working at this time. Please try again later.</p>
+        <a href="contact.php" class="cta-button">Go Back to Contact Us</a>
+    </div>
+
+</body>
+</html>
