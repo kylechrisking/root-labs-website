@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <script src="path/to/particles.js"></script>
     <script src="script.js" defer></script>
+    <script src="contact_form.js"></script>
 </head>
 
 <body>
@@ -34,7 +35,7 @@
                     <div class="social-links">
                         <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
                         <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="#" target="_blank"><i classfab fa-linkedin"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
                     </div>
                 </div>
                 <div class="contact-form">

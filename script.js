@@ -242,3 +242,11 @@ document.getElementById("back-to-top").onclick = function() {
   document.body.scrollTop = 0; // For Safari
   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
+
+// Static Header
+fetch('header.html')
+  .then(response => response.text())
+  .then(data => {
+    const headerElement = document.getElementById('header');
+    headerElement.innerHTML = data;
+  })

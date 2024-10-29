@@ -36,7 +36,7 @@ try {
 	$mail->Body 		= $senderName . ' is inquiring about ' . $serviceType . " regarding: \n" . $messageBody ;
 
 	$mail->send();
-	echo 'Message has been sent';
+//	echo 'Message has been sent';
 } catch (Exception $e) {
 	echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
 }

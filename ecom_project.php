@@ -71,8 +71,8 @@
             <p>By following this comprehensive approach, you can successfully upgrade your customer's e-commerce platform, delivering a secure, efficient, and customer-centric online shopping experience.</p>
             <h2>Ready to Get Started?</h2>
             <p>Contact us today for a free consultation and let's discuss how our 3D printing services can help you achieve your goals.</p>
-            <a href="contact.php" class="back-button">Contact Us</a>
-            <a href="projects.php" class="back-button">Back to Projects</a>
+            <a href="contact.html" class="back-button">Contact Us</a>
+            <a href="projects.html" class="back-button">Back to Projects</a>
         </section>
     </main>
 
