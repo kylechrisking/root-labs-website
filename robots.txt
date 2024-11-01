@@ -1,0 +1,8 @@
+# Allow all crawlers access to everything
+User-agent: *
+Disallow: /error.html
+Disallow: /readme.md
+
+# Link to the sitemap
+Sitemap: https://www.yourwebsite.com/sitemap.xml
+
