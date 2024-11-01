@@ -4,5 +4,5 @@ Disallow: /error.html
 Disallow: /readme.md
 
 # Link to the sitemap
-Sitemap: https://www.yourwebsite.com/sitemap.xml
+Sitemap: https://www.rootlabs.us/sitemap.xml
 
