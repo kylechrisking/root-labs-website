@@ -79,7 +79,7 @@
       <h2 class="section-title">Client Testimonials</h2>
       <div class="testimonial-container">
           <div class="testimonial">
-              <p>"Great service, always prompt and does what he says he will do."</p>
+              <p>"Great service, James is always prompt and does what he says he will do."</p>
               <cite>- Brandon Cooper, Newburgh Group</cite>
               <div class="testimonial-rating">
                   <i class="fas fa-star"></i>
