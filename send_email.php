@@ -15,6 +15,23 @@ $senderEmail = $_POST['email'];
 $messageBody = $_POST['message'];
 $serviceType = $_POST['service'];
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $recaptchaSecret = getenv('RECAPTCHA_SECRET_KEY'); // Get the secret key from the environment variable
+    $recaptchaResponse = $_POST['g-recaptcha-response'];
+
+    // Verify the reCAPTCHA response
+    $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptchaSecret}&response={$recaptchaResponse}");
+    $responseKeys = json_decode($response, true);
+
+    if (intval($responseKeys["success"]) !== 1) {
+        echo 'reCAPTCHA verification failed. Please try again.';
+        exit;
+    }
+
+    // Proceed with sending the email or processing the form
+    // ...
+}
+
 try {
 	//Server settings
 	$mail->isSMTP();

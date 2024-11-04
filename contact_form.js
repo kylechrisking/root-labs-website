@@ -7,6 +7,13 @@ document.addEventListener('DOMContentLoaded', function() {
     event.preventDefault(); // Prevent the default form submission
     console.log('Form submission event triggered'); // Debugging line
 
+    // Check if reCAPTCHA is completed
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (recaptchaResponse.length === 0) {
+      alert('Please complete the reCAPTCHA.');
+      return; // Stop the form submission
+    }
+
     // Disable the submit button and change its style
     submitButton.disabled = true;
     submitButton.style.backgroundColor = 'gray'; // Change button color to gray

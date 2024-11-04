@@ -25,6 +25,12 @@
             <label for="message">Message</label>
             <textarea id="message" name="message" required placeholder="Your Message"></textarea>
         </div>
+
+        <!-- reCAPTCHA widget;testing-->
+        <div class="g-recaptcha" data-sitekey="<?php echo getenv('RECAPTCHA_SITE_KEY'); ?>"></div> <!-- Use the site key from the environment variable -->
+
         <button type="submit" class="submit-btn" id="submit-button">Send Message</button>
     </form>
 </div>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
