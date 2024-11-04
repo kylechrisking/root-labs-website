@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="contact-form">
-                    <?php include 'contact_form.html';?>
+                    <?php include 'contact_form.php';?>
                 </div>
             </div>
         </section>
