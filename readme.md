@@ -1,28 +1,70 @@
 # Root Labs Website
 
-Welcome to the Root Labs website! This project showcases our services in web development, 3D printing, networking, and cybersecurity.
+The official website for Root Labs US, featuring professional IT consulting services and the personal portfolio of Kyle King.
 
-## Introduction
+## Overview
 
-Root Labs is dedicated to providing innovative IT solutions. Our website serves as a platform to showcase our services, projects, and contact information for potential clients.
+This repository contains the source code for:
+1. Root Labs US company website (rootlabs.us)
+2. Kyle King's personal portfolio (rootlabs.us/portfolio)
+
+### Root Labs Section
+The main website showcases our professional IT consulting services, including:
+- System Administration
+- Network Infrastructure
+- Cloud Services
+- Web Development
+- Cybersecurity Solutions
+
+### Portfolio Section
+An interactive portfolio featuring:
+- Professional background and skills
+- Featured projects and work examples
+- Interactive character stats
+- Dark/light mode theme
+- Custom animations and effects
+- Contact information
+
+## Development
+
+### Prerequisites
+- PHP 7.4+
+- Web server (Apache/Nginx)
+- Modern web browser
+
+### Setup
+1. Clone the repository
+2. Configure your web server to point to the project directory
+3. Ensure proper permissions for the contact form functionality
+
+### Structure
+```
+root-labs-website/
+├── css/
+├── js/
+├── images/
+├── portfolio/
+├── .gitignore
+├── CHANGELOG.md
+├── README.md
+└── index.php
+```
 
 ## Features
+- Responsive design
+- Interactive UI elements
+- Secure contact forms
+- Dark/light mode support
+- Custom cursor animations
+- Project showcases
+- Professional resume section
 
-- **Responsive Design**: The website is designed to be fully responsive, ensuring a great user experience on all devices.
-- **Service Pages**: Detailed pages for each service we offer, including web development, 3D printing, and cybersecurity.
-- **Contact Form**: A functional contact form that allows users to reach out for inquiries.
-- **Project Showcase**: A section dedicated to showcasing our recent projects.
-
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Version History
+See [CHANGELOG.md](CHANGELOG.md) for a detailed list of changes.
 
 ## Contact
+For Root Labs inquiries: [rootlabs.us/contact](https://rootlabs.us/contact)
+For portfolio inquiries: [rootlabs.us/portfolio#contact](https://rootlabs.us/portfolio#contact)
 
-**James Samford**  
-Email: [james@rootlabs.us](mailto:james@rootlabs.us)  
-**Kyle King**  
-Email: [kyle@rootlabs.us](mailto:kyle@rootlabs.us)   
-
-For more information, visit our GitHub profile: [Root Labs GitHub](https://github.com/kylechrisking)
+## License
+Copyright © 2024 Root Labs US. All rights reserved.
