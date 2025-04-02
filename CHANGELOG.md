@@ -10,11 +10,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial schema import with users and categories
 - PHP mysqli extension installation
 - Apache mod_headers module configuration
+- Debug toggle functionality for better development experience
+- Improved session handling and security measures
+- Enhanced user role management system
+- Login logs table for tracking user activity
 
 ### Changed
 - Separated blog and portfolio CSS files
 - Updated .htaccess configurations
 - Reorganized file structure for better separation
+- Improved debug information display with toggle functionality
+- Enhanced security by removing sensitive setup scripts
+- Updated .gitignore to exclude all sensitive files
+- Improved user authentication flow
+- Enhanced error handling and logging
+
+### Security
+- Removed sensitive setup scripts after use
+- Added comprehensive .gitignore rules
+- Enhanced session security
+- Improved password handling
+- Added login activity logging
+- Protected sensitive configuration files
 
 ### Known Issues (To Be Fixed)
 - Portfolio styles not loading properly (CSS not being applied)
@@ -69,11 +86,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Temporarily hidden certain social media icons for future use
 - Fixed robots.txt configuration error
 
-## [1.0.0] - 2024-10-28
+## [1.0.0] - 2024-06-15
 ### Added
-- Initial live version deployment
-- Basic website structure and functionality
-- Contact form with email submission (initial version)
-- Company overview and services
-- Basic responsive design
-- Root Labs branding and styling 
+- Initial release of the blog platform
+- User authentication system with role-based access control
+- Blog post management with categories and tags
+- Comment system with moderation
+- Admin dashboard with statistics
+- Responsive design for all devices
+- SEO-friendly URLs and meta tags
+
+### Security
+- Implemented password hashing using PHP's password_hash()
+- Added CSRF protection
+- Implemented SQL injection prevention using prepared statements
+- Added XSS protection with proper output escaping
+- Configured secure session handling
+- Added input validation and sanitization
+- Created .gitignore to exclude sensitive files
+- Added .env.example for configuration without exposing credentials
+
+### Fixed
+- Fixed session handling to prevent redirect loops
+- Fixed memory exhaustion issue in debug logging
+- Improved error handling throughout the application
+- Fixed user role verification in authentication
+
+## [0.9.0] - 2024-06-01
+### Added
+- Beta testing version with core functionality
+- Database schema and initial tables
+- Basic admin interface
+- User management system
+
+### Changed
+- Refactored code for better organization
+- Improved security measures
+- Enhanced error handling
+
+## [0.8.0] - 2024-05-15
+### Added
+- Alpha testing version
+- Basic blog functionality
+- User authentication
+- Post management
+
+### Known Issues
+- Session handling issues
+- Memory usage in debug mode
+- Role-based access control not fully implemented 

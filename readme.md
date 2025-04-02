@@ -1,70 +1,113 @@
-# Root Labs Website
+# Root Labs Blog
 
-The official website for Root Labs US, featuring professional IT consulting services and the personal portfolio of Kyle King.
+A modern, secure, and feature-rich blog platform built with PHP.
 
-## Overview
+## Features
 
-This repository contains the source code for:
-1. Root Labs US company website (rootlabs.us)
-2. Kyle King's personal portfolio (rootlabs.us/portfolio)
+- User authentication and role-based access control
+- Blog post management with categories and tags
+- Comment system with moderation
+- Responsive design for all devices
+- SEO-friendly URLs and meta tags
+- Security features including CSRF protection and password hashing
 
-### Root Labs Section
-The main website showcases our professional IT consulting services, including:
-- System Administration
-- Network Infrastructure
-- Cloud Services
-- Web Development
-- Cybersecurity Solutions
+## Requirements
 
-### Portfolio Section
-An interactive portfolio featuring:
-- Professional background and skills
-- Featured projects and work examples
-- Interactive character stats
-- Dark/light mode theme
-- Custom animations and effects
-- Contact information
+- PHP 7.4 or higher
+- MySQL 5.7 or higher
+- Apache/Nginx web server
+- mod_rewrite enabled (for Apache)
+- PDO PHP extension
+- GD PHP extension (for image handling)
+
+## Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/root-labs-website.git
+   cd root-labs-website
+   ```
+
+2. Create a `.env` file based on `.env.example`:
+   ```
+   cp .env.example .env
+   ```
+
+3. Edit the `.env` file with your database and site configuration.
+
+4. Import the database schema:
+   ```
+   mysql -u your_username -p your_database_name < blog/schema.sql
+   ```
+
+5. Set up the web server to point to the `blog` directory.
+
+6. Set proper permissions:
+   ```
+   chmod -R 755 blog
+   chmod -R 777 blog/uploads
+   chmod -R 777 blog/cache
+   chmod -R 777 blog/logs
+   ```
+
+7. Create an admin user:
+   ```
+   php blog/admin/create_admin.php
+   ```
+
+## Usage
+
+### Admin Panel
+
+Access the admin panel at `/blog/admin/` and log in with your admin credentials.
+
+### Blog Posts
+
+- Create, edit, and delete blog posts
+- Manage categories and tags
+- Moderate comments
+- View statistics
+
+### User Management
+
+- Create and manage user accounts
+- Assign roles (admin, editor, user)
+- Reset passwords
+
+## Security
+
+This application implements several security measures:
+
+- Password hashing using PHP's password_hash()
+- CSRF protection
+- SQL injection prevention using prepared statements
+- XSS protection with proper output escaping
+- Session security with proper configuration
+- Input validation and sanitization
 
 ## Development
 
-### Prerequisites
-- PHP 7.4+
-- Web server (Apache/Nginx)
-- Modern web browser
+### Directory Structure
 
-### Setup
-1. Clone the repository
-2. Configure your web server to point to the project directory
-3. Ensure proper permissions for the contact form functionality
+- `blog/` - Main application directory
+  - `admin/` - Admin panel files
+  - `assets/` - CSS, JavaScript, and images
+  - `includes/` - PHP includes and functions
+  - `uploads/` - User uploaded files
+  - `cache/` - Cache files
+  - `logs/` - Log files
 
-### Structure
-```
-root-labs-website/
-├── css/
-├── js/
-├── images/
-├── portfolio/
-├── .gitignore
-├── CHANGELOG.md
-├── README.md
-└── index.php
-```
+### Coding Standards
 
-## Features
-- Responsive design
-- Interactive UI elements
-- Secure contact forms
-- Dark/light mode support
-- Custom cursor animations
-- Project showcases
-- Professional resume section
-
-## Version History
-See [CHANGELOG.md](CHANGELOG.md) for a detailed list of changes.
-
-## Contact
-For Root Labs inquiries: [rootlabs.us/contact](https://rootlabs.us/contact)
-For portfolio inquiries: [rootlabs.us/portfolio#contact](https://rootlabs.us/portfolio#contact)
+- Follow PSR-4 autoloading standards
+- Use PSR-12 coding style
+- Document all functions and classes
+- Write unit tests for critical functionality
 
 ## License
-Copyright © 2024 Root Labs US. All rights reserved.
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support, please open an issue in the GitHub repository or contact the administrator.

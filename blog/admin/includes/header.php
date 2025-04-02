@@ -1,137 +1,144 @@
 <?php
-require_once __DIR__ . '/../../includes/auth.php';
-requireAuth(); // Ensure user is logged in
+require_once __DIR__ . '/../../includes/config.php';
+require_once __DIR__ . '/../../includes/db.php';
+require_once __DIR__ . '/../../includes/functions.php';
 
-$currentUser = getCurrentUser();
+// Check if user is logged in and is an admin
+if (!isLoggedIn() || !isAdmin()) {
+    redirect('../login.php');
+}
+
+// Get current page for navigation highlighting
+$current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo SITE_TITLE; ?> - Admin Panel</title>
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <title>Admin Dashboard - Root Labs Blog</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
-    
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.3.0/alpine.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#content',
+            height: 500,
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+            ],
+            toolbar: 'undo redo | formatselect | bold italic backcolor | \
+                     alignleft aligncenter alignright alignjustify | \
+                     bullist numlist outdent indent | removeformat | help'
+        });
+    </script>
 </head>
 <body class="bg-gray-100">
-    <div x-data="{ sidebarOpen: false }" class="flex h-screen bg-gray-100">
+    <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <div class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden" 
-             x-show="sidebarOpen" 
-             @click="sidebarOpen = false">
-        </div>
-
-        <div class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-gray-900 lg:translate-x-0 lg:static lg:inset-0"
-             :class="{'translate-x-0 ease-out': sidebarOpen, '-translate-x-full ease-in': !sidebarOpen}">
-            
-            <div class="flex items-center justify-center mt-8">
-                <div class="flex items-center">
-                    <span class="mx-2 text-2xl font-semibold text-white">Root Labs</span>
-                </div>
+        <div class="w-64 bg-gray-800 text-white">
+            <div class="p-4">
+                <h1 class="text-xl font-bold">Root Labs Blog</h1>
+                <p class="text-sm text-gray-400">Admin Dashboard</p>
             </div>
-
-            <nav class="mt-10">
-                <a class="flex items-center px-6 py-2 mt-4 text-gray-100 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-                   href="index.php">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
-                    </svg>
-                    <span class="mx-3">Dashboard</span>
+            <nav class="mt-4">
+                <a href="index.php" class="block py-2 px-4 <?php echo $current_page === 'index.php' ? 'bg-gray-700' : 'hover:bg-gray-700'; ?>">
+                    Dashboard
                 </a>
-
-                <a class="flex items-center px-6 py-2 mt-4 text-gray-100 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-                   href="posts.php">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2"/>
-                    </svg>
-                    <span class="mx-3">Posts</span>
+                <a href="posts.php" class="block py-2 px-4 <?php echo $current_page === 'posts.php' ? 'bg-gray-700' : 'hover:bg-gray-700'; ?>">
+                    Posts
                 </a>
-
-                <a class="flex items-center px-6 py-2 mt-4 text-gray-100 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-                   href="categories.php">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                    </svg>
-                    <span class="mx-3">Categories</span>
+                <a href="categories.php" class="block py-2 px-4 <?php echo $current_page === 'categories.php' ? 'bg-gray-700' : 'hover:bg-gray-700'; ?>">
+                    Categories
                 </a>
-
-                <a class="flex items-center px-6 py-2 mt-4 text-gray-100 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-                   href="comments.php">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                    </svg>
-                    <span class="mx-3">Comments</span>
+                <a href="tags.php" class="block py-2 px-4 <?php echo $current_page === 'tags.php' ? 'bg-gray-700' : 'hover:bg-gray-700'; ?>">
+                    Tags
                 </a>
-
-                <a class="flex items-center px-6 py-2 mt-4 text-gray-100 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-                   href="settings.php">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    <span class="mx-3">Settings</span>
+                <a href="comments.php" class="block py-2 px-4 <?php echo $current_page === 'comments.php' ? 'bg-gray-700' : 'hover:bg-gray-700'; ?>">
+                    Comments
+                </a>
+                <a href="users.php" class="block py-2 px-4 <?php echo $current_page === 'users.php' ? 'bg-gray-700' : 'hover:bg-gray-700'; ?>">
+                    Users
+                </a>
+                <a href="settings.php" class="block py-2 px-4 <?php echo $current_page === 'settings.php' ? 'bg-gray-700' : 'hover:bg-gray-700'; ?>">
+                    Settings
                 </a>
             </nav>
-
-            <div class="absolute bottom-0 w-full">
-                <div class="flex items-center px-6 py-4 text-gray-100">
-                    <div>
-                        <p class="text-sm font-medium"><?php echo htmlspecialchars($currentUser['username']); ?></p>
-                        <a href="logout.php" class="text-xs text-gray-400 hover:text-gray-100">Sign out</a>
+            <div class="mt-auto p-4 border-t border-gray-700">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="inline-block h-8 w-8 rounded-full bg-gray-500"></span>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></p>
+                        <a href="logout.php" class="text-xs text-gray-400 hover:text-white">Logout</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="flex flex-col flex-1 overflow-hidden">
-            <!-- Header -->
-            <header class="flex items-center justify-between px-6 py-4 bg-white border-b-4 border-indigo-600">
-                <div class="flex items-center">
-                    <button @click="sidebarOpen = true" class="text-gray-500 focus:outline-none lg:hidden">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
+        <!-- Main content -->
+        <div class="flex-1">
+            <header class="bg-white shadow">
+                <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-2xl font-bold text-gray-900">
+                        <?php
+                        switch ($current_page) {
+                            case 'index.php':
+                                echo 'Dashboard';
+                                break;
+                            case 'posts.php':
+                                echo 'Posts';
+                                break;
+                            case 'categories.php':
+                                echo 'Categories';
+                                break;
+                            case 'tags.php':
+                                echo 'Tags';
+                                break;
+                            case 'comments.php':
+                                echo 'Comments';
+                                break;
+                            case 'users.php':
+                                echo 'Users';
+                                break;
+                            case 'settings.php':
+                                echo 'Settings';
+                                break;
+                            default:
+                                echo 'Admin Dashboard';
+                        }
+                        ?>
+                    </h1>
                 </div>
+            </header>
 
-                <div class="flex items-center">
-                    <div x-data="{ notificationOpen: false }" class="relative">
-                        <button @click="notificationOpen = ! notificationOpen" class="flex mx-4 text-gray-600 focus:outline-none">
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15 17H20L18.5951 15.5951C18.2141 15.2141 18 14.6973 18 14.1585V11C18 8.38757 16.3304 6.16509 14 5.34142V5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5V5.34142C7.66962 6.16509 6 8.38757 6 11V14.1585C6 14.6973 5.78595 15.2141 5.40493 15.5951L4 17H9M15 17V18C15 19.6569 13.6569 21 12 21C10.3431 21 9 19.6569 9 18V17M15 17H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-
-                        <div x-show="notificationOpen" @click="notificationOpen = false" class="fixed inset-0 z-10 w-full h-full"></div>
-
-                        <div x-show="notificationOpen" class="absolute right-0 z-10 mt-2 overflow-hidden bg-white rounded-lg shadow-xl w-80" style="width: 20rem;">
-                            <div class="py-2">
-                                <a href="#" class="flex items-center px-4 py-3 -mx-2 transition-colors duration-200 transform hover:bg-gray-100">
-                                    <p class="mx-2 text-sm text-gray-600"><span class="font-bold">No new notifications</span></p>
-                                </a>
+            <?php
+            // Display flash messages
+            $flash = getFlashMessage();
+            if ($flash): ?>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+                    <div class="rounded-md p-4 <?php echo $flash['type'] === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'; ?>">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <?php if ($flash['type'] === 'success'): ?>
+                                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                <?php else: ?>
+                                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                <?php endif; ?>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium"><?php echo htmlspecialchars($flash['message']); ?></p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </header>
+            <?php endif; ?>
 
-            <!-- Main content -->
-            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
-                <div class="container px-6 py-8 mx-auto"><?php
-                    // Display flash messages if any
-                    if (isset($_SESSION['flash'])) {
-                        $flash = $_SESSION['flash'];
-                        $alertClass = $flash['type'] === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700';
-                        echo "<div class='px-4 py-3 mb-4 border rounded {$alertClass}' role='alert'>";
-                        echo "<p class='font-bold'>{$flash['message']}</p>";
-                        echo "</div>";
-                        unset($_SESSION['flash']);
-                    }
-                ?> 
+            <main class="max-w-7xl mx-auto py-4 sm:px-6 lg:px-8"> 

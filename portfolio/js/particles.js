@@ -7,15 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Configuration
     const config = {
         particleCount: 100,
-        baseSize: 2,
-        baseSpeed: 0.5,
+        baseSize: 3,
+        baseSpeed: 0.2,
         baseColor: '107, 70, 193', // RGB for #6b46c1
-        interactionRadius: 100,
-        interactionStrength: 0.001,
-        particleOpacity: 0.5,
-        connectionDistance: 150,
-        connectionOpacity: 0.15,
-        fps: 60
+        interactionRadius: 150,
+        interactionStrength: 0.002,
+        particleOpacity: 0.7,
+        connectionDistance: 0, // Set to 0 to disable connections
+        connectionOpacity: 0,
+        fps: 60,
+        glowEffect: true,
+        glowSize: 15,
+        glowOpacity: 0.3
     };
 
     // Get canvas context
@@ -38,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         reset() {
             // Base properties
-            this.size = Math.random() * config.baseSize + 1;
+            this.size = Math.random() * config.baseSize + 2;
             this.baseSpeedX = (Math.random() - 0.5) * config.baseSpeed;
             this.baseSpeedY = (Math.random() - 0.5) * config.baseSpeed;
             
@@ -52,6 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Opacity for fade effects
             this.opacity = config.particleOpacity;
+            
+            // Glow effect
+            this.glowSize = this.size * 3;
+            this.glowOpacity = config.glowOpacity;
         }
 
         update() {
@@ -78,6 +85,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         draw() {
+            // Draw glow effect
+            if (config.glowEffect) {
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.glowSize
+                );
+                gradient.addColorStop(0, `rgba(${config.baseColor}, ${this.glowOpacity})`);
+                gradient.addColorStop(1, `rgba(${config.baseColor}, 0)`);
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.glowSize, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+            }
+            
+            // Draw particle
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(${config.baseColor}, ${this.opacity})`;
@@ -94,8 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.vx += dx * config.interactionStrength * force;
                 this.vy += dy * config.interactionStrength * force;
                 this.opacity = config.particleOpacity * (1 + force * 0.5);
+                this.glowOpacity = config.glowOpacity * (1 + force * 0.5);
             } else {
                 this.opacity = config.particleOpacity;
+                this.glowOpacity = config.glowOpacity;
             }
         }
     }
@@ -159,32 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
         draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Draw connections
-            this.drawConnections();
-            
             // Draw particles
             this.particles.forEach(particle => {
                 particle.draw();
             });
-        }
-
-        drawConnections() {
-            for (let i = 0; i < this.particles.length; i++) {
-                for (let j = i + 1; j < this.particles.length; j++) {
-                    const dx = this.particles[i].x - this.particles[j].x;
-                    const dy = this.particles[i].y - this.particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < config.connectionDistance) {
-                        const opacity = (1 - dist / config.connectionDistance) * config.connectionOpacity;
-                        ctx.beginPath();
-                        ctx.moveTo(this.particles[i].x, this.particles[i].y);
-                        ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                        ctx.strokeStyle = `rgba(${config.baseColor}, ${opacity})`;
-                        ctx.stroke();
-                    }
-                }
-            }
         }
 
         animate(currentTime) {

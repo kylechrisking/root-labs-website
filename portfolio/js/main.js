@@ -203,102 +203,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Project Carousel
+     * Project Grid Display
      */
     function initProjectCarousel() {
+        // Disable carousel functionality to show all projects at once
         if (!elements.projectGrid) return;
-
-        const projects = elements.projectGrid.querySelectorAll('.project-card:not(.hidden-project)');
-        if (projects.length <= 1) return;
-
-        let currentIndex = 0;
-        let autoplayInterval;
-
-        const showProject = (index) => {
-            projects.forEach((project, i) => {
-                project.style.display = i === index ? 'block' : 'none';
-                project.classList.toggle('active', i === index);
-            });
-        };
-
-        // Create navigation
-        const nav = document.createElement('div');
-        nav.className = 'project-nav';
-        nav.innerHTML = `
-            <button class="prev" aria-label="Previous project">←</button>
-            <div class="project-indicators"></div>
-            <button class="next" aria-label="Next project">→</button>
-        `;
-
-        // Add indicators
-        const indicators = nav.querySelector('.project-indicators');
-        projects.forEach((_, i) => {
-            const dot = document.createElement('button');
-            dot.className = 'project-indicator';
-            dot.setAttribute('aria-label', `Go to project ${i + 1}`);
-            dot.addEventListener('click', () => goToProject(i));
-            indicators.appendChild(dot);
+        
+        // Remove any carousel-specific classes or attributes
+        const projectCards = elements.projectGrid.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
+            card.style.display = 'block';
+            card.style.opacity = '1';
+            card.style.transform = 'none';
         });
-
-        elements.projectGrid.appendChild(nav);
-
-        // Navigation functions
-        const goToProject = (index) => {
-            currentIndex = index;
-            showProject(currentIndex);
-            updateIndicators();
-            resetAutoplay();
-        };
-
-        const prevProject = () => {
-            goToProject((currentIndex - 1 + projects.length) % projects.length);
-        };
-
-        const nextProject = () => {
-            goToProject((currentIndex + 1) % projects.length);
-        };
-
-        const updateIndicators = () => {
-            const dots = indicators.querySelectorAll('.project-indicator');
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentIndex);
-            });
-        };
-
-        // Add event listeners
-        nav.querySelector('.prev').addEventListener('click', prevProject);
-        nav.querySelector('.next').addEventListener('click', nextProject);
-
-        // Autoplay functionality
-        const startAutoplay = () => {
-            autoplayInterval = setInterval(nextProject, config.carouselAutoplayDelay);
-        };
-
-        const resetAutoplay = () => {
-            clearInterval(autoplayInterval);
-            startAutoplay();
-        };
-
-        // Touch support
-        let touchStartX = 0;
-        elements.projectGrid.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-        }, { passive: true });
-
-        elements.projectGrid.addEventListener('touchend', (e) => {
-            const touchEndX = e.changedTouches[0].clientX;
-            const diff = touchStartX - touchEndX;
-
-            if (Math.abs(diff) > 50) {
-                if (diff > 0) nextProject();
-                else prevProject();
-            }
-        }, { passive: true });
-
-        // Initialize
-        showProject(0);
-        updateIndicators();
-        startAutoplay();
+        
+        // Remove any carousel controls if they exist
+        const carouselControls = document.querySelector('.carousel-controls');
+        if (carouselControls) {
+            carouselControls.style.display = 'none';
+        }
     }
 
     /**

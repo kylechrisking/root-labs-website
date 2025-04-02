@@ -6,11 +6,11 @@
     <title>Kyle King | Portfolio</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
-    <link rel="manifest" href="assets/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="manifest" href="images/site.webmanifest">
     
     <!-- CSS Files -->
     <link rel="stylesheet" href="css/main.css">
@@ -27,7 +27,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <script src="js/theme.js"></script>
 </head>
-<body>
+<body class="portfolio-section">
     <!-- Custom Cursor -->
     <div class="cursor-outer"></div>
     <div class="cursor-inner"></div>
@@ -115,31 +115,6 @@
             <div class="about-grid">
                 <div class="about-text">
                     <p>IT Systems Engineer & Full Stack Developer with a passion for creating innovative solutions and a strong foundation in web development since 2019. Currently serving as an Information Technology System Engineer at Bally's Evansville Casino & Hotel and Chief of Operations at Root Labs US.</p>
-                    <p>My technical expertise includes:</p>
-                    <ul class="skills-list">
-                        <li>Full Stack Development</li>
-                        <li>System Administration</li>
-                        <li>Network Infrastructure</li>
-                        <li>Cloud Services</li>
-                        <li>Cybersecurity</li>
-                        <li>VMware Virtualization</li>
-                        <li>Windows Server</li>
-                        <li>Active Directory</li>
-                        <li>Ruby on Rails</li>
-                        <li>JavaScript Development</li>
-                    </ul>
-                </div>
-                <div class="about-cards">
-                    <div class="card">
-                        <h3>Full Stack Developer</h3>
-                        <p>Building web applications and solutions</p>
-                        <span class="year">2019 - Present</span>
-                    </div>
-                    <div class="card">
-                        <h3>Root Labs</h3>
-                        <p>Co-founder & Lead Developer</p>
-                        <span class="year">2024 - Present</span>
-                    </div>
                 </div>
             </div>
             <div class="character-panel">
@@ -153,61 +128,77 @@
                                 </svg>
                             </div>
                             <div class="stat-info">
-                                <span class="stat-label">Level</span>
+                                <span class="stat-label">Experience Level</span>
                                 <span class="stat-value" data-value="24">0</span>
+                                <div class="stat-detail">Years in Tech: 5</div>
                             </div>
                         </div>
                         <div class="specializations">
-                            <span class="spec-tag">Full Stack Engineer</span>
-                            <span class="spec-tag">Systems Engineer</span>
-                            <span class="spec-tag">Project Manager</span>
-                            <span class="spec-tag">Team Lead</span>
+                            <span class="spec-tag" data-tooltip="Proficient in full-stack web development and modern frameworks">Full Stack Engineer</span>
+                            <span class="spec-tag" data-tooltip="Expert in IT infrastructure and system administration">Systems Engineer</span>
+                            <span class="spec-tag" data-tooltip="Leading teams and managing technical projects">Project Manager</span>
+                            <span class="spec-tag" data-tooltip="Guiding technical direction and team development">Team Lead</span>
                         </div>
                     </div>
 
                     <div class="stat-group achievements">
-                        <div class="stat-item completion-rate" data-tooltip="Projects successfully completed and deployed">
-                            <div class="stat-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                </svg>
-                            </div>
+                        <div class="stat-item system-mastery" data-tooltip="Proficiency in managing complex IT systems">
+                            <div class="stat-icon">🖥️</div>
                             <div class="stat-info">
-                                <span class="stat-label">Quest Completion</span>
+                                <span class="stat-label">System Mastery</span>
                                 <div class="progress-bar">
                                     <div class="progress-fill" data-percentage="95"></div>
-                                    <div class="stat-detail">projects completed: 5</div>
+                                    <div class="stat-detail">Expert in VMware, Windows Server, Active Directory</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="stat-item energy-stats" data-tooltip="Daily espresso consumption for optimal coding performance">
-                            <div class="stat-icon">☕</div>
+                        <div class="stat-item code-proficiency" data-tooltip="Programming languages and development skills">
+                            <div class="stat-icon">⌨️</div>
                             <div class="stat-info">
-                                <span class="stat-label">Energy Source</span>
+                                <span class="stat-label">Code Proficiency</span>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" data-percentage="75"></div>
-                                    <div class="stat-detail">3-4 cups/day</div>
+                                    <div class="progress-fill" data-percentage="90"></div>
+                                    <div class="stat-detail">JavaScript, PHP, Ruby on Rails</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="stat-item" data-tooltip="Hours spent debugging and optimizing code">
-                            <div class="stat-icon">⚔️</div>
+                        <div class="stat-item network-security" data-tooltip="Network infrastructure and security expertise">
+                            <div class="stat-icon">🛡️</div>
                             <div class="stat-info">
-                                <span class="stat-label">Debug Power</span>
+                                <span class="stat-label">Network & Security</span>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" data-percentage="80"></div>
-                                    <div class="stat-detail">over 500 hours</div>
+                                    <div class="progress-fill" data-percentage="85"></div>
+                                    <div class="stat-detail">Infrastructure, Cybersecurity, Cloud Services</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="stat-item" data-tooltip="Ability to learn and adapt to new technologies">
+                        <div class="stat-item problem-solving" data-tooltip="Ability to tackle complex technical challenges">
+                            <div class="stat-icon">🔧</div>
+                            <div class="stat-info">
+                                <span class="stat-label">Problem Solving</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" data-percentage="92"></div>
+                                    <div class="stat-detail">500+ technical issues resolved</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-item learning-rate" data-tooltip="Speed and efficiency in mastering new technologies">
                             <div class="stat-icon">📚</div>
                             <div class="stat-info">
                                 <span class="stat-label">Learning Rate</span>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" data-percentage="90"></div>
-                                    <div class="stat-detail">advanced proficiency</div>
+                                    <div class="progress-fill" data-percentage="95"></div>
+                                    <div class="stat-detail">Rapid adaptation to new technologies</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-item leadership" data-tooltip="Team management and project leadership capabilities">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-info">
+                                <span class="stat-label">Leadership</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" data-percentage="88"></div>
+                                    <div class="stat-detail">Managing technical teams and projects</div>
                                 </div>
                             </div>
                         </div>
@@ -235,7 +226,7 @@
                 <!-- Root Labs Project -->
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="assets/images/rootlabs-preview.png" alt="Root Labs Website Preview">
+                        <img src="images/rootlabs-preview.png" alt="Root Labs Website Preview">
                         <div class="project-overlay">
                             <div class="project-links">
                                 <a href="https://www.rootlabs.us" target="_blank" class="project-link">Visit Site</a>
@@ -254,23 +245,24 @@
                     </div>
                 </div>
 
-                <!-- Flutter Project -->
+                <!-- King Mechanical Specialty Project -->
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="assets/images/flutter-preview.png" alt="Flutter Project Preview">
+                        <img src="images/king-mechanical-preview.png" alt="King Mechanical Specialty Website Preview">
                         <div class="project-overlay">
                             <div class="project-links">
-                                <a href="https://github.com/kylechrisking/Flutter" target="_blank" class="project-link">View Code</a>
+                                <a href="#" class="project-link">Coming Soon</a>
                             </div>
                         </div>
                     </div>
                     <div class="project-info">
-                        <h3>Flutter</h3>
-                        <p>[Senior Project]: A Twitter clone built with Ruby on Rails, showcasing social media functionality and web development skills.</p>
+                        <h3>King Mechanical Specialty</h3>
+                        <p>Website redesign for a mechanical specialty company, featuring modern UI and improved user experience.</p>
                         <div class="project-tech">
-                            <span>Ruby</span>
-                            <span>Rails</span>
-                            <span>Web Development</span>
+                            <span>HTML</span>
+                            <span>CSS</span>
+                            <span>JavaScript</span>
+                            <span>PHP</span>
                         </div>
                     </div>
                 </div>
@@ -278,7 +270,7 @@
                 <!-- Taskly Project -->
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="assets/images/taskly-preview.png" alt="Taskly Project Preview">
+                        <img src="images/taskly-preview.png" alt="Taskly Project Preview">
                         <div class="project-overlay">
                             <div class="project-links">
                                 <a href="https://github.com/kylechrisking/taskly" target="_blank" class="project-link">View Code</a>
@@ -299,7 +291,7 @@
                 <!-- IT Empire Idle -->
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="assets/images/it-empire-preview.png" alt="IT Empire Idle Game Preview">
+                        <img src="images/it-empire-preview.png" alt="IT Empire Idle Game Preview">
                         <div class="project-overlay">
                             <div class="project-links">
                                 <a href="https://github.com/kylechrisking/it-empire-idle" target="_blank" class="project-link">View Code</a>
@@ -317,60 +309,14 @@
                     </div>
                 </div>
 
-                <!-- Rootbound Project -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="assets/images/rootbound-preview.png" alt="Rootbound Game Preview">
-                        <div class="project-overlay">
-                            <div class="project-links">
-                                <a href="https://github.com/kylechrisking/Rootbound" target="_blank" class="project-link">View Code</a>
-                                <a href="https://www.rootlabs.us" target="_blank" class="project-link">Visit Site</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Rootbound</h3>
-                        <p>A cozy farming and exploration game where you play as a magical tree spirit, featuring dynamic quest systems, critter interactions, and museum collection mechanics.</p>
-                        <div class="project-tech">
-                            <span>Unity</span>
-                            <span>C#</span>
-                            <span>Game Development</span>
-                            <span>UI Toolkit</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Blog Project -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="assets/images/blog-preview.png" alt="Personal Blog Preview">
-                        <div class="project-overlay">
-                            <div class="project-links">
-                                <a href="../blog" target="_blank" class="project-link">View Live</a>
-                                <a href="https://github.com/kylechrisking/blog" target="_blank" class="project-link">View Code</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Personal Blog</h3>
-                        <p>A custom-built blog platform with admin panel, markdown support, and AI-powered content generation.</p>
-                        <div class="project-tech">
-                            <span>PHP</span>
-                            <span>MySQL</span>
-                            <span>JavaScript</span>
-                            <span>OpenAI API</span>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- More Coming Soon -->
-                <div class="project-card hidden-project">
+                <div class="project-card">
                     <div class="project-image">
                         <div class="project-placeholder">
                             <span class="coming-soon-icon">✨</span>
                             <div class="coming-soon-text">
                                 <h3>More Coming Soon</h3>
-                                <p>Stay tuned for future projects!</p>
+                                <p>Stay tuned for future projects! Follow our <a href="../blog" class="blog-link">blog</a> for updates and behind-the-scenes content.</p>
                             </div>
                         </div>
                     </div>
@@ -406,6 +352,18 @@
                             <li>Built practical solutions for real-world business challenges</li>
                             <li>Established strong foundation in modern web technologies</li>
                         </ul>
+                    </div>
+                    
+                    <h3>Certifications</h3>
+                    <div class="resume-item">
+                        <h4>Professional Licensing</h4>
+                        <p>IN Gaming License LEVEL 2</p>
+                        <span class="year">Dec 2024 - Dec 2027</span>
+                    </div>
+                    <div class="resume-item">
+                        <h4>CompTIA A+</h4>
+                        <p>IT Fundamentals & Technical Support</p>
+                        <span class="year">In Progress</span>
                     </div>
                 </div>
                 
@@ -458,155 +416,52 @@
                     </div>
                 </div>
 
-                <div class="resume-section">
+                <div class="resume-section skills-section">
                     <h3>Technical Skills</h3>
-                    <div class="skills-grid">
-                        <div class="skill-category">
-                            <h4>Systems & Infrastructure</h4>
-                            <ul>
-                                <li>
-                                    <span>AS400 / Unix AIX</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 50%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>VMware ESXi</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 50%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>Windows Server</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 75%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>Active Directory</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 100%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>Linux</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 90%"></div>
-                                    </div>
-                                </li>
-                            </ul>
+                    <div class="skills-container">
+                        <div class="skills-column">
+                            <div class="skill-category">
+                                <h4>Systems & Infrastructure</h4>
+                                <div class="skill-tags">
+                                    <span class="skill-tag">AS400 / Unix AIX</span>
+                                    <span class="skill-tag">VMware ESXi</span>
+                                    <span class="skill-tag">Windows Server</span>
+                                    <span class="skill-tag">Active Directory</span>
+                                    <span class="skill-tag">Linux</span>
+                                </div>
+                            </div>
+                            <div class="skill-category">
+                                <h4>Networking & Security</h4>
+                                <div class="skill-tags">
+                                    <span class="skill-tag">TCP/IP</span>
+                                    <span class="skill-tag">DNS / DHCP</span>
+                                    <span class="skill-tag">VPN</span>
+                                    <span class="skill-tag">Data Encryption</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="skill-category">
-                            <h4>Networking & Security</h4>
-                            <ul>
-                                <li>
-                                    <span>TCP/IP</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 90%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>DNS / DHCP</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 90%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>VPN</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 95%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>Data Encryption</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 90%"></div>
-                                    </div>
-                                </li>
-                            </ul>
+                        <div class="skills-column">
+                            <div class="skill-category">
+                                <h4>Development</h4>
+                                <div class="skill-tags">
+                                    <span class="skill-tag">Ruby on Rails</span>
+                                    <span class="skill-tag">JavaScript</span>
+                                    <span class="skill-tag">HTML/CSS</span>
+                                    <span class="skill-tag">System Scripts</span>
+                                    <span class="skill-tag">Documentation</span>
+                                </div>
+                            </div>
+                            <div class="skill-category">
+                                <h4>Professional Skills</h4>
+                                <div class="skill-tags">
+                                    <span class="skill-tag">Team Leadership</span>
+                                    <span class="skill-tag">Project Management</span>
+                                    <span class="skill-tag">Customer Relations</span>
+                                    <span class="skill-tag">Technical Training</span>
+                                    <span class="skill-tag">Problem Solving</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="skill-category">
-                            <h4>Development</h4>
-                            <ul>
-                                <li>
-                                    <span>Ruby on Rails</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 40%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>JavaScript</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 85%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>HTML/CSS</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 95%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>System Scripts</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 60%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>Documentation</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 100%"></div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="skill-category">
-                            <h4>Professional Skills</h4>
-                            <ul>
-                                <li>
-                                    <span>Team Leadership</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 90%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>Project Management</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 85%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>Customer Relations</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 100%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>Technical Training</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 95%"></div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>Problem Solving</span>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" style="width: 95%"></div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="skills-tooltip">
-                        <p><small>* Bars represent proficiency level from basic (25%) to expert (100%)</small></p>
-                    </div>
-                </div>
-
-                <div class="resume-section">
-                    <h3>Certifications</h3>
-                    <div class="resume-item">
-                        <h4>Professional Licensing</h4>
-                        <p>IN Gaming License LEVEL 2</p>
-                        <span class="year">Dec 2024 - Dec 2027</span>
                     </div>
                 </div>
             </div>
@@ -719,7 +574,7 @@
                 <a href="../blog/admin/" class="admin-link" style="display: none;">Admin Panel</a>
                 <div class="footer-easter-eggs">
                     <p class="footer-easter-egg">Press 'K' to discover something special</p>
-                    <p class="footer-easter-egg">Try typing 'king' for a royal surprise ✨</p>
+                    <p class="footer-easter-egg">Try typing 'king' for a royal surprise 👑✨</p>
                 </div>
             </div>
         </div>

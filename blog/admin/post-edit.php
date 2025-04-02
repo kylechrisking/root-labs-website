@@ -4,249 +4,256 @@ require_once '../includes/db.php';
 require_once '../includes/functions.php';
 require_once './includes/header.php';
 
-$id = $_GET['id'] ?? null;
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $post = null;
-$tags = [];
+$errors = [];
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
-    $content = $_POST['content'];
-    $excerpt = filter_input(INPUT_POST, 'excerpt', FILTER_SANITIZE_STRING);
-    $category_id = filter_input(INPUT_POST, 'category_id', FILTER_SANITIZE_NUMBER_INT);
-    $status = filter_input(INPUT_POST, 'status', FILTER_SANITIZE_STRING);
-    $tags = explode(',', $_POST['tags']);
-    
-    try {
-        $db->beginTransaction();
-        
-        // Handle image upload
-        $featured_image = null;
-        if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] === UPLOAD_ERR_OK) {
-            $upload = handleImageUpload($_FILES['featured_image']);
-            if ($upload['success']) {
-                $featured_image = $upload['path'];
-            } else {
-                throw new Exception($upload['error']);
-            }
-        }
-        
-        // Generate slug
-        $slug = generateSlug($title);
-        if ($id) {
-            // Check if slug exists for other posts
-            $stmt = $db->prepare("SELECT id FROM posts WHERE slug = ? AND id != ?");
-            $stmt->execute([$slug, $id]);
-        } else {
-            $stmt = $db->prepare("SELECT id FROM posts WHERE slug = ?");
-            $stmt->execute([$slug]);
-        }
-        if ($stmt->fetch()) {
-            $slug = $slug . '-' . time();
-        }
-        
-        if ($id) {
-            // Update existing post
-            $sql = "UPDATE posts SET 
-                    title = ?, content = ?, excerpt = ?, category_id = ?, 
-                    status = ?, slug = ?, updated_at = NOW()";
-            $params = [$title, $content, $excerpt, $category_id, $status, $slug];
-            
-            if ($featured_image) {
-                $sql .= ", featured_image = ?";
-                $params[] = $featured_image;
-            }
-            
-            $sql .= " WHERE id = ?";
-            $params[] = $id;
-            
-            $stmt = $db->prepare($sql);
-            $stmt->execute($params);
-        } else {
-            // Create new post
-            $sql = "INSERT INTO posts (title, content, excerpt, category_id, status, 
-                    slug, author_id, featured_image, created_at, updated_at) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
-            $stmt = $db->prepare($sql);
-            $stmt->execute([
-                $title, $content, $excerpt, $category_id, $status,
-                $slug, $currentUser['id'], $featured_image
-            ]);
-            $id = $db->lastInsertId();
-        }
-        
-        // Handle tags
-        if ($id) {
-            // Remove old tags
-            $stmt = $db->prepare("DELETE FROM post_tags WHERE post_id = ?");
-            $stmt->execute([$id]);
-            
-            // Add new tags
-            foreach ($tags as $tag_name) {
-                if (!empty(trim($tag_name))) {
-                    // Get or create tag
-                    $tag_slug = generateSlug($tag_name);
-                    $stmt = $db->prepare("SELECT id FROM tags WHERE slug = ?");
-                    $stmt->execute([$tag_slug]);
-                    $tag = $stmt->fetch();
-                    
-                    if (!$tag) {
-                        $stmt = $db->prepare("INSERT INTO tags (name, slug) VALUES (?, ?)");
-                        $stmt->execute([trim($tag_name), $tag_slug]);
-                        $tag_id = $db->lastInsertId();
-                    } else {
-                        $tag_id = $tag['id'];
-                    }
-                    
-                    // Link tag to post
-                    $stmt = $db->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
-                    $stmt->execute([$id, $tag_id]);
-                }
-            }
-        }
-        
-        $db->commit();
-        $_SESSION['flash'] = ['type' => 'success', 'message' => 'Post saved successfully'];
-        header('Location: posts.php');
-        exit;
-    } catch (Exception $e) {
-        $db->rollBack();
-        $_SESSION['flash'] = ['type' => 'error', 'message' => 'Error saving post: ' . $e->getMessage()];
-    }
-}
+// Get categories
+$categories = $db->query("SELECT id, name FROM categories ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
 
-// Get post data for editing
-if ($id) {
+// Get tags
+$tags = $db->query("SELECT id, name FROM tags ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
+
+if ($id > 0) {
+    // Get existing post
     $stmt = $db->prepare("
-        SELECT p.*, GROUP_CONCAT(t.name) as tags
+        SELECT p.*, GROUP_CONCAT(pt.tag_id) as tag_ids
         FROM posts p
         LEFT JOIN post_tags pt ON p.id = pt.post_id
-        LEFT JOIN tags t ON pt.tag_id = t.id
         WHERE p.id = ?
         GROUP BY p.id
     ");
     $stmt->execute([$id]);
-    $post = $stmt->fetch();
-    if ($post) {
-        $tags = $post['tags'] ? explode(',', $post['tags']) : [];
+    $post = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$post) {
+        setFlashMessage('error', 'Post not found.');
+        redirect('posts.php');
     }
 }
 
-// Get categories
-$categories = $db->query("SELECT id, name FROM categories ORDER BY name")->fetchAll();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $title = trim($_POST['title'] ?? '');
+    $slug = trim($_POST['slug'] ?? '');
+    $content = trim($_POST['content'] ?? '');
+    $excerpt = trim($_POST['excerpt'] ?? '');
+    $category_id = (int)($_POST['category_id'] ?? 0);
+    $status = $_POST['status'] ?? 'draft';
+    $selected_tags = isset($_POST['tags']) ? array_map('intval', $_POST['tags']) : [];
+
+    // Validate input
+    if (empty($title)) {
+        $errors[] = 'Title is required.';
+    }
+    if (empty($slug)) {
+        $slug = generateSlug($title);
+    }
+    if (empty($content)) {
+        $errors[] = 'Content is required.';
+    }
+    if ($category_id === 0) {
+        $errors[] = 'Category is required.';
+    }
+
+    // Check if slug is unique
+    $stmt = $db->prepare("SELECT id FROM posts WHERE slug = ? AND id != ?");
+    $stmt->execute([$slug, $id]);
+    if ($stmt->fetch()) {
+        $errors[] = 'A post with this slug already exists.';
+    }
+
+    if (empty($errors)) {
+        try {
+            $db->beginTransaction();
+
+            if ($id > 0) {
+                // Update existing post
+                $stmt = $db->prepare("
+                    UPDATE posts 
+                    SET title = ?, slug = ?, content = ?, excerpt = ?, 
+                        category_id = ?, status = ?, updated_at = NOW()
+                    WHERE id = ?
+                ");
+                $stmt->execute([$title, $slug, $content, $excerpt, $category_id, $status, $id]);
+
+                // Delete existing tags
+                $db->prepare("DELETE FROM post_tags WHERE post_id = ?")->execute([$id]);
+            } else {
+                // Create new post
+                $stmt = $db->prepare("
+                    INSERT INTO posts (title, slug, content, excerpt, category_id, 
+                                     status, user_id, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+                ");
+                $stmt->execute([$title, $slug, $content, $excerpt, $category_id, $status, $_SESSION['user_id']]);
+                $id = $db->lastInsertId();
+            }
+
+            // Add tags
+            if (!empty($selected_tags)) {
+                $stmt = $db->prepare("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)");
+                foreach ($selected_tags as $tag_id) {
+                    $stmt->execute([$id, $tag_id]);
+                }
+            }
+
+            $db->commit();
+            setFlashMessage('success', $id > 0 ? 'Post updated successfully.' : 'Post created successfully.');
+            redirect('posts.php');
+        } catch (Exception $e) {
+            $db->rollBack();
+            $errors[] = 'Error saving post: ' . $e->getMessage();
+        }
+    }
+}
+
+// Get post tags for editing
+$post_tags = [];
+if ($post) {
+    $stmt = $db->prepare("SELECT tag_id FROM post_tags WHERE post_id = ?");
+    $stmt->execute([$id]);
+    $post_tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
+}
 ?>
 
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-semibold text-gray-900">
-        <?php echo $id ? 'Edit Post' : 'New Post'; ?>
-    </h1>
-</div>
+<div class="max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold text-gray-900">
+            <?php echo $id > 0 ? 'Edit Post' : 'Create New Post'; ?>
+        </h1>
+        <a href="posts.php" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"/>
+            </svg>
+            Back to Posts
+        </a>
+    </div>
 
-<form method="post" enctype="multipart/form-data" class="space-y-6">
-    <div class="bg-white rounded-lg shadow-sm p-6">
-        <!-- Title -->
-        <div class="mb-6">
-            <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-            <input type="text" id="title" name="title" required
-                   value="<?php echo htmlspecialchars($post['title'] ?? ''); ?>"
-                   class="form-input">
-        </div>
-
-        <!-- Content -->
-        <div class="mb-6">
-            <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div>
-                    <textarea id="content" name="content" rows="20" required
-                              onkeyup="updatePreview(this.value)"
-                              class="form-textarea font-mono"><?php echo htmlspecialchars($post['content'] ?? ''); ?></textarea>
+    <?php if (!empty($errors)): ?>
+        <div class="rounded-md bg-red-50 p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
                 </div>
-                <div>
-                    <div id="preview" class="prose max-w-none p-4 border rounded-lg overflow-y-auto" style="height: 500px;">
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">There were errors with your submission</h3>
+                    <div class="mt-2 text-sm text-red-700">
+                        <ul class="list-disc pl-5 space-y-1">
+                            <?php foreach ($errors as $error): ?>
+                                <li><?php echo htmlspecialchars($error); ?></li>
+                            <?php endforeach; ?>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
+    <?php endif; ?>
 
-        <!-- Excerpt -->
-        <div class="mb-6">
-            <label for="excerpt" class="block text-sm font-medium text-gray-700">Excerpt</label>
-            <textarea id="excerpt" name="excerpt" rows="3"
-                      class="form-textarea"><?php echo htmlspecialchars($post['excerpt'] ?? ''); ?></textarea>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Category -->
-            <div>
-                <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
-                <select id="category_id" name="category_id" required class="form-select">
-                    <option value="">Select a category</option>
-                    <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['id']; ?>" 
-                                <?php echo ($post['category_id'] ?? '') == $category['id'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($category['name']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <!-- Status -->
-            <div>
-                <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                <select id="status" name="status" required class="form-select">
-                    <option value="draft" <?php echo ($post['status'] ?? '') === 'draft' ? 'selected' : ''; ?>>Draft</option>
-                    <option value="published" <?php echo ($post['status'] ?? '') === 'published' ? 'selected' : ''; ?>>Published</option>
-                    <option value="private" <?php echo ($post['status'] ?? '') === 'private' ? 'selected' : ''; ?>>Private</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Tags -->
-        <div class="mt-6">
-            <label for="tagInput" class="block text-sm font-medium text-gray-700">Tags</label>
-            <div class="tag-container">
-                <div id="tagContainer" class="flex flex-wrap gap-2">
-                    <!-- Tags will be inserted here -->
+    <form method="POST" class="space-y-6">
+        <div class="bg-white shadow rounded-lg p-6">
+            <div class="grid grid-cols-1 gap-6">
+                <!-- Title -->
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                    <input type="text" name="title" id="title" 
+                           value="<?php echo htmlspecialchars($post['title'] ?? ''); ?>"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                           required>
                 </div>
-                <input type="text" id="tagInput" placeholder="Add tags..."
-                       class="tag-input">
-                <input type="hidden" id="tags" name="tags" 
-                       value="<?php echo htmlspecialchars(implode(',', $tags)); ?>">
+
+                <!-- Slug -->
+                <div>
+                    <label for="slug" class="block text-sm font-medium text-gray-700">Slug</label>
+                    <input type="text" name="slug" id="slug" 
+                           value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <p class="mt-1 text-sm text-gray-500">Leave empty to generate from title</p>
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
+                    <select name="category_id" id="category_id" 
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            required>
+                        <option value="">Select a category</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?php echo $category['id']; ?>" 
+                                    <?php echo ($post['category_id'] ?? '') == $category['id'] ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($category['name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <!-- Tags -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Tags</label>
+                    <div class="mt-2 space-y-2">
+                        <?php foreach ($tags as $tag): ?>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="tags[]" id="tag_<?php echo $tag['id']; ?>" 
+                                       value="<?php echo $tag['id']; ?>"
+                                       <?php echo in_array($tag['id'], $post_tags) ? 'checked' : ''; ?>
+                                       class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                <label for="tag_<?php echo $tag['id']; ?>" class="ml-2 text-sm text-gray-700">
+                                    <?php echo htmlspecialchars($tag['name']); ?>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div>
+                    <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
+                    <textarea name="content" id="content" rows="20" 
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              required><?php echo htmlspecialchars($post['content'] ?? ''); ?></textarea>
+                </div>
+
+                <!-- Excerpt -->
+                <div>
+                    <label for="excerpt" class="block text-sm font-medium text-gray-700">Excerpt</label>
+                    <textarea name="excerpt" id="excerpt" rows="3" 
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"><?php echo htmlspecialchars($post['excerpt'] ?? ''); ?></textarea>
+                    <p class="mt-1 text-sm text-gray-500">A short description of the post</p>
+                </div>
+
+                <!-- Status -->
+                <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select name="status" id="status" 
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="draft" <?php echo ($post['status'] ?? '') === 'draft' ? 'selected' : ''; ?>>Draft</option>
+                        <option value="published" <?php echo ($post['status'] ?? '') === 'published' ? 'selected' : ''; ?>>Published</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <!-- Featured Image -->
-        <div class="mt-6">
-            <label for="featured_image" class="block text-sm font-medium text-gray-700">Featured Image</label>
-            <?php if (!empty($post['featured_image'])): ?>
-                <div class="mt-2">
-                    <img src="<?php echo htmlspecialchars($post['featured_image']); ?>" 
-                         alt="" class="image-preview" id="imagePreview">
-                </div>
-            <?php else: ?>
-                <img src="" alt="" class="image-preview hidden" id="imagePreview">
-            <?php endif; ?>
-            <input type="file" id="featured_image" name="featured_image" accept="image/*"
-                   onchange="handleFileSelect(event)"
-                   class="mt-1 block w-full text-sm text-gray-500
-                          file:mr-4 file:py-2 file:px-4
-                          file:rounded-full file:border-0
-                          file:text-sm file:font-semibold
-                          file:bg-indigo-50 file:text-indigo-700
-                          hover:file:bg-indigo-100">
+        <div class="flex justify-end space-x-3">
+            <a href="posts.php" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Cancel
+            </a>
+            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <?php echo $id > 0 ? 'Update Post' : 'Create Post'; ?>
+            </button>
         </div>
-    </div>
-
-    <!-- Actions -->
-    <div class="flex justify-end space-x-3">
-        <a href="posts.php" class="btn btn-secondary">Cancel</a>
-        <button type="submit" class="btn btn-primary">Save Post</button>
-    </div>
-</form>
+    </form>
+</div>
 
 <script>
-    // Initialize markdown preview
-    updatePreview(document.getElementById('content').value);
+document.getElementById('title').addEventListener('input', function() {
+    if (!document.getElementById('slug').value) {
+        document.getElementById('slug').value = this.value
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '');
+    }
+});
 </script>
 
 <?php require_once './includes/footer.php'; ?> 

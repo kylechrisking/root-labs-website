@@ -5,6 +5,9 @@ config/local.php
 
 # Sensitive files
 includes/config.local.php
+includes/db.local.php
+admin/includes/auth.local.php
+admin/includes/config.local.php
 
 # Cache and temporary files
 cache/*
@@ -15,6 +18,7 @@ tmp/*
 *.log
 error_log
 logs/*
+login_logs/*
 
 # User uploaded content
 uploads/*
@@ -30,4 +34,23 @@ node_modules/*
 *.swp
 *.swo
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Session files
+sessions/*
+!sessions/.gitkeep
+
+# Database backups
+*.sql
+*.sqlite
+*.db
+
+# API keys and secrets
+**/api_keys.json
+**/secrets.json
+**/credentials.json 

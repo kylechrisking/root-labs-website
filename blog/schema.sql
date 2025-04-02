@@ -9,6 +9,9 @@ CREATE TABLE IF NOT EXISTS `users` (
     `username` varchar(50) NOT NULL,
     `display_name` varchar(100) NOT NULL,
     `email` varchar(255) NOT NULL,
+    `password_hash` varchar(255) NOT NULL,
+    `role` enum('user','admin') NOT NULL DEFAULT 'user',
+    `status` enum('active','blocked') NOT NULL DEFAULT 'active',
     `bio` text,
     `avatar_url` varchar(255),
     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -27,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
     `parent_id` int(11) DEFAULT NULL,
     `is_personal` tinyint(1) NOT NULL DEFAULT '0',
     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `slug` (`slug`),
     KEY `parent_id` (`parent_id`),
@@ -62,7 +66,9 @@ CREATE TABLE IF NOT EXISTS `tags` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `name` varchar(100) NOT NULL,
     `slug` varchar(100) NOT NULL,
+    `description` text,
     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `slug` (`slug`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -97,14 +103,25 @@ CREATE TABLE IF NOT EXISTS `post_meta` (
     `post_id` int(11) NOT NULL,
     `meta_key` varchar(255) NOT NULL,
     `meta_value` text,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `post_id` (`post_id`),
     KEY `meta_key` (`meta_key`),
     CONSTRAINT `fk_postmeta_post` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Insert default categories
-INSERT INTO `categories` (`name`, `slug`, `description`, `is_personal`) VALUES
+-- Settings table
+CREATE TABLE IF NOT EXISTS `settings` (
+    `name` varchar(255) NOT NULL,
+    `value` text,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Insert default categories (using INSERT IGNORE to skip duplicates)
+INSERT IGNORE INTO `categories` (`name`, `slug`, `description`, `is_personal`) VALUES
 ('Personal', 'personal', 'Personal blog posts', 1),
 ('Tech News', 'tech-news', 'Technology news and updates', 0),
 ('Root Labs', 'root-labs', 'Root Labs company news and updates', 0),
@@ -114,7 +131,13 @@ INSERT INTO `categories` (`name`, `slug`, `description`, `is_personal`) VALUES
 ('Security', 'security', 'Cybersecurity news and tips', 0),
 ('Development', 'development', 'Development tips and best practices', 0);
 
--- Insert initial users
-INSERT INTO `users` (`username`, `display_name`, `email`) VALUES
-('kking', 'Kyle King', 'kyle@rootlabs.us'),
-('JSamford', 'James Samford', 'james@rootlabs.us'); 
+-- Create login_logs table
+CREATE TABLE IF NOT EXISTS login_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    user_agent TEXT,
+    action ENUM('login', 'logout', 'failed') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci; 

@@ -15,27 +15,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const config = {
         kingCode: 'king',
         bufferTimeout: 1000,
-        scrollDelay: 500,
-        crownDuration: 3000,
-        sparkleCount: 20,
-        sparkleColors: ['#FFD700', '#FFA500', '#FF8C00', '#FFE4B5', '#FFDAB9'],
+        scrollDelay: 300,
+        crownDuration: 5000,
+        sparkleCount: 50,
+        sparkleColors: ['#FFD700', '#FFA500', '#FF8C00', '#FFE4B5', '#FFDAB9', '#FFF8DC', '#F0E68C', '#DAA520'],
         sparkleSize: {
             min: 5,
-            max: 15
-        }
+            max: 20
+        },
+        particleCount: 100,
+        particleColors: ['#FFD700', '#FFA500', '#FF8C00', '#FFE4B5', '#FFDAB9', '#FFF8DC', '#F0E68C', '#DAA520']
     };
 
     // Cache DOM elements
     const heroSection = document.querySelector('.hero');
     const crown = document.querySelector('.crown');
+    const glitchText = document.querySelector('.glitch-text');
 
     // Exit if required elements aren't found
-    if (!heroSection || !crown) return;
+    if (!heroSection || !crown || !glitchText) return;
 
     // Create sparkle container for better performance
     const sparkleContainer = document.createElement('div');
     sparkleContainer.className = 'sparkle-container';
     heroSection.appendChild(sparkleContainer);
+
+    // Create particle container
+    const particleContainer = document.createElement('div');
+    particleContainer.className = 'particle-container';
+    heroSection.appendChild(particleContainer);
 
     /**
      * Handle keydown events for the 'king' easter egg
@@ -69,6 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function activateKingEasterEgg() {
         state.isAnimating = true;
         
+        // Add glitch effect to name
+        glitchText.classList.add('glitch-active');
+        
         // Smooth scroll to top
         window.scrollTo({
             top: 0,
@@ -78,16 +89,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show crown after scroll
         setTimeout(() => {
             requestAnimationFrame(() => {
+                // Create particles
+                createParticleEffect();
+                
+                // Show crown with enhanced animation
                 crown.classList.remove('hidden');
                 crown.classList.add('show');
                 
                 // Create sparkles with staggered animation
                 createSparkleEffect();
                 
+                // Add royal text effect
+                addRoyalTextEffect();
+                
                 // Reset after animation
                 setTimeout(() => {
                     crown.classList.remove('show');
                     crown.classList.add('hidden');
+                    glitchText.classList.remove('glitch-active');
                     state.isAnimating = false;
                 }, config.crownDuration);
             });
@@ -95,6 +114,67 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Reset buffer
         state.kingBuffer = '';
+    }
+
+    /**
+     * Create particle effect for enhanced visual appeal
+     */
+    function createParticleEffect() {
+        // Clear existing particles
+        particleContainer.innerHTML = '';
+        
+        // Create particles with staggered animation
+        for (let i = 0; i < config.particleCount; i++) {
+            setTimeout(() => {
+                createParticle();
+            }, i * 20); // Stagger creation
+        }
+    }
+
+    /**
+     * Create individual particle with random properties
+     */
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Random position
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        
+        // Random size
+        const size = Math.random() * 5 + 2;
+        
+        // Random color
+        const color = config.particleColors[Math.floor(Math.random() * config.particleColors.length)];
+        
+        // Random direction
+        const angle = Math.random() * 360;
+        const distance = Math.random() * 100 + 50;
+        
+        // Apply styles with hardware acceleration
+        particle.style.cssText = `
+            left: ${left}%;
+            top: ${top}%;
+            width: ${size}px;
+            height: ${size}px;
+            background-color: ${color};
+            transform: translate3d(0, 0, 0);
+        `;
+        
+        // Add to container
+        particleContainer.appendChild(particle);
+        
+        // Trigger animation
+        requestAnimationFrame(() => {
+            particle.style.opacity = '0';
+            particle.style.transform = `translate3d(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px, 0)`;
+        });
+        
+        // Cleanup
+        setTimeout(() => {
+            particle.remove();
+        }, 2000);
     }
 
     /**
@@ -108,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < config.sparkleCount; i++) {
             setTimeout(() => {
                 createSparkle();
-            }, i * 50); // Stagger creation
+            }, i * 30); // Stagger creation
         }
     }
 
@@ -154,7 +234,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // Cleanup
         setTimeout(() => {
             sparkle.remove();
-        }, 1000);
+        }, 1500);
+    }
+
+    /**
+     * Add royal text effect to the name
+     */
+    function addRoyalTextEffect() {
+        // Add golden glow to the name
+        glitchText.style.textShadow = '0 0 10px rgba(255, 215, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.3)';
+        
+        // Reset after animation
+        setTimeout(() => {
+            glitchText.style.textShadow = '';
+        }, config.crownDuration);
     }
 
     // Additional easter eggs

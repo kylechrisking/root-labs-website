@@ -70,6 +70,21 @@
         document.addEventListener('DOMContentLoaded', function() {
             initTagInput();
         });
+
+        // Add any additional JavaScript here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Close flash messages after 5 seconds
+            const flashMessages = document.querySelectorAll('.rounded-md.p-4');
+            flashMessages.forEach(function(flash) {
+                setTimeout(function() {
+                    flash.style.opacity = '0';
+                    flash.style.transition = 'opacity 0.5s ease-in-out';
+                    setTimeout(function() {
+                        flash.remove();
+                    }, 500);
+                }, 5000);
+            });
+        });
     </script>
 </body>
 </html> 

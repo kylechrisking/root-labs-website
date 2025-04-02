@@ -1,166 +1,346 @@
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Start output buffering to capture any errors
+ob_start();
+
 require_once '../includes/config.php';
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
-require_once './includes/header.php';
 
-// Get statistics
-$stats = [
-    'posts' => $db->query("SELECT COUNT(*) FROM posts")->fetchColumn(),
-    'comments' => $db->query("SELECT COUNT(*) FROM comments")->fetchColumn(),
-    'categories' => $db->query("SELECT COUNT(*) FROM categories")->fetchColumn(),
-    'pending_comments' => $db->query("SELECT COUNT(*) FROM comments WHERE status = 'pending'")->fetchColumn()
-];
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Initialize debug array if it doesn't exist
+if (!isset($_SESSION['debug'])) {
+    $_SESSION['debug'] = [];
+}
+
+$_SESSION['debug'][] = "Script started";
+$_SESSION['debug'][] = "Session ID: " . session_id();
+$_SESSION['debug'][] = "Session user_id: " . (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'not set');
+$_SESSION['debug'][] = "Session role: " . (isset($_SESSION['role']) ? $_SESSION['role'] : 'not set');
+
+// Check if user is logged in
+if (!isLoggedIn()) {
+    $_SESSION['debug'][] = "User not logged in, redirecting to login";
+    header("Location: login.php");
+    exit;
+}
+
+// Check if user is admin
+if (!isAdmin()) {
+    $_SESSION['debug'][] = "User not admin, redirecting to login";
+    header("Location: login.php");
+    exit;
+}
+
+// Get user data
+$user = getUserById($_SESSION['user_id']);
+if (!$user) {
+    $_SESSION['debug'][] = "User not found in database, redirecting to login";
+    session_unset();
+    header("Location: login.php");
+    exit;
+}
+
+// Get counts for dashboard
+try {
+    $post_count = $db->query("SELECT COUNT(*) FROM posts")->fetchColumn();
+    $user_count = $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
+    $comment_count = $db->query("SELECT COUNT(*) FROM comments")->fetchColumn();
+    
+    $_SESSION['debug'][] = "Dashboard counts retrieved successfully";
+} catch (PDOException $e) {
+    error_log("Error getting dashboard counts: " . $e->getMessage());
+    $_SESSION['debug'][] = "Error getting dashboard counts: " . $e->getMessage();
+    
+    $post_count = 0;
+    $user_count = 0;
+    $comment_count = 0;
+}
 
 // Get recent posts
-$recentPosts = $db->query("
-    SELECT p.*, u.username 
-    FROM posts p 
-    JOIN users u ON p.author_id = u.id 
-    ORDER BY p.created_at DESC 
-    LIMIT 5
-")->fetchAll();
+try {
+    $stmt = $db->query("
+        SELECT p.*, u.username as author_name, c.name as category_name
+        FROM posts p
+        LEFT JOIN users u ON p.author_id = u.id
+        LEFT JOIN categories c ON p.category_id = c.id
+        ORDER BY p.created_at DESC
+        LIMIT 5
+    ");
+    $recent_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $_SESSION['debug'][] = "Recent posts retrieved successfully";
+} catch (PDOException $e) {
+    error_log("Error getting recent posts: " . $e->getMessage());
+    $_SESSION['debug'][] = "Error getting recent posts: " . $e->getMessage();
+    
+    $recent_posts = [];
+}
 
 // Get recent comments
-$recentComments = $db->query("
-    SELECT c.*, p.title as post_title 
-    FROM comments c 
-    JOIN posts p ON c.post_id = p.id 
-    ORDER BY c.created_at DESC 
-    LIMIT 5
-")->fetchAll();
+try {
+    $stmt = $db->query("
+        SELECT c.*, p.title as post_title, u.username as author_name
+        FROM comments c
+        LEFT JOIN posts p ON c.post_id = p.id
+        LEFT JOIN users u ON c.author_id = u.id
+        ORDER BY c.created_at DESC
+        LIMIT 5
+    ");
+    $recent_comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $_SESSION['debug'][] = "Recent comments retrieved successfully";
+} catch (PDOException $e) {
+    error_log("Error getting recent comments: " . $e->getMessage());
+    $_SESSION['debug'][] = "Error getting recent comments: " . $e->getMessage();
+    
+    $recent_comments = [];
+}
+
+// Get any output buffer errors
+$output_errors = ob_get_clean();
+if (!empty($output_errors)) {
+    $_SESSION['debug'][] = "Output errors: " . $output_errors;
+}
 ?>
-
-<h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
-
-<!-- Statistics -->
-<div class="mt-4">
-    <div class="grid grid-cols-1 gap-5 mt-2 sm:grid-cols-2 lg:grid-cols-4">
-        <!-- Posts count -->
-        <div class="p-4 transition-shadow border rounded-lg shadow-sm hover:shadow-lg">
-            <div class="flex items-start justify-between">
-                <div class="flex flex-col space-y-2">
-                    <span class="text-gray-400">Total Posts</span>
-                    <span class="text-lg font-semibold"><?php echo $stats['posts']; ?></span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Root Labs Blog Admin</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237E22CE'%3E%3Cpath d='M4 4v16a2 2 0 002 2h12a2 2 0 002-2V8.342a2 2 0 00-.602-1.43l-4.44-4.342A2 2 0 0013.56 2H6a2 2 0 00-2 2z'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="../assets/css/admin-shared.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .stat-card h3 {
+            margin: 0 0 0.5rem 0;
+            color: #4a5568;
+            font-size: 1rem;
+        }
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .recent-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        .recent-section h2 {
+            margin: 0 0 1rem 0;
+            color: #4a5568;
+            font-size: 1.25rem;
+        }
+        .recent-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .recent-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .recent-list li:last-child {
+            border-bottom: none;
+        }
+        .recent-list a {
+            color: #4a5568;
+            text-decoration: none;
+        }
+        .recent-list a:hover {
+            color: #667eea;
+        }
+        .recent-meta {
+            font-size: 0.875rem;
+            color: #718096;
+        }
+        .dashboard-footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .debug-toggle {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+            z-index: 100;
+        }
+        
+        .debug-toggle:hover {
+            opacity: 1;
+        }
+        
+        .debug-info {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: var(--background);
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            white-space: pre-wrap;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .debug-info.visible {
+            display: block;
+        }
+        
+        .debug-info strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <nav class="admin-nav">
+            <div class="nav-brand">Root Labs Blog Admin</div>
+            <div class="nav-links">
+                <a href="index.php" class="active">Dashboard</a>
+                <a href="posts.php">Posts</a>
+                <a href="categories.php">Categories</a>
+                <a href="comments.php">Comments</a>
+                <a href="users.php">Users</a>
+                <a href="settings.php">Settings</a>
+            </div>
+            <div class="nav-user">
+                <span>Welcome, <?php echo htmlspecialchars($user['username']); ?></span>
+                <a href="logout.php" class="logout-btn">Logout</a>
+            </div>
+        </nav>
+        
+        <main class="main-content">
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>Total Posts</h3>
+                    <div class="number"><?php echo $post_count; ?></div>
                 </div>
-                <div class="p-2 bg-gray-100 rounded-md">
-                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <div class="number"><?php echo $user_count; ?></div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Comments</h3>
+                    <div class="number"><?php echo $comment_count; ?></div>
                 </div>
             </div>
-        </div>
-
-        <!-- Comments count -->
-        <div class="p-4 transition-shadow border rounded-lg shadow-sm hover:shadow-lg">
-            <div class="flex items-start justify-between">
-                <div class="flex flex-col space-y-2">
-                    <span class="text-gray-400">Total Comments</span>
-                    <span class="text-lg font-semibold"><?php echo $stats['comments']; ?></span>
-                </div>
-                <div class="p-2 bg-gray-100 rounded-md">
-                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-                    </svg>
-                </div>
+            
+            <div class="recent-section">
+                <h2>Recent Posts</h2>
+                <?php if (!empty($recent_posts)): ?>
+                    <ul class="recent-list">
+                        <?php foreach ($recent_posts as $post): ?>
+                            <li>
+                                <a href="edit_post.php?id=<?php echo $post['id']; ?>">
+                                    <?php echo htmlspecialchars($post['title']); ?>
+                                </a>
+                                <div class="recent-meta">
+                                    By <?php echo htmlspecialchars($post['author_name']); ?> 
+                                    in <?php echo htmlspecialchars($post['category_name']); ?>
+                                    on <?php echo date('M j, Y', strtotime($post['created_at'])); ?>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <p>No posts found.</p>
+                <?php endif; ?>
             </div>
-        </div>
-
-        <!-- Categories count -->
-        <div class="p-4 transition-shadow border rounded-lg shadow-sm hover:shadow-lg">
-            <div class="flex items-start justify-between">
-                <div class="flex flex-col space-y-2">
-                    <span class="text-gray-400">Categories</span>
-                    <span class="text-lg font-semibold"><?php echo $stats['categories']; ?></span>
-                </div>
-                <div class="p-2 bg-gray-100 rounded-md">
-                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                    </svg>
-                </div>
+            
+            <div class="recent-section">
+                <h2>Recent Comments</h2>
+                <?php if (!empty($recent_comments)): ?>
+                    <ul class="recent-list">
+                        <?php foreach ($recent_comments as $comment): ?>
+                            <li>
+                                <a href="edit_comment.php?id=<?php echo $comment['id']; ?>">
+                                    <?php echo htmlspecialchars(truncateText($comment['content'], 100)); ?>
+                                </a>
+                                <div class="recent-meta">
+                                    By <?php echo htmlspecialchars($comment['author_name']); ?> 
+                                    on <?php echo htmlspecialchars($comment['post_title']); ?>
+                                    on <?php echo date('M j, Y', strtotime($comment['created_at'])); ?>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <p>No comments found.</p>
+                <?php endif; ?>
             </div>
-        </div>
-
-        <!-- Pending comments -->
-        <div class="p-4 transition-shadow border rounded-lg shadow-sm hover:shadow-lg">
-            <div class="flex items-start justify-between">
-                <div class="flex flex-col space-y-2">
-                    <span class="text-gray-400">Pending Comments</span>
-                    <span class="text-lg font-semibold"><?php echo $stats['pending_comments']; ?></span>
-                </div>
-                <div class="p-2 bg-gray-100 rounded-md">
-                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
+            
+            <div class="dashboard-footer">
+                <p>&copy; <?php echo date('Y'); ?> Root Labs Blog. All rights reserved.</p>
             </div>
-        </div>
+        </main>
     </div>
-</div>
-
-<!-- Recent Activity -->
-<div class="grid grid-cols-1 gap-5 mt-5 lg:grid-cols-2">
-    <!-- Recent Posts -->
-    <div class="p-4 bg-white border rounded-lg shadow-sm">
-        <h2 class="text-xl font-semibold text-gray-900">Recent Posts</h2>
-        <div class="mt-4 space-y-4">
-            <?php foreach ($recentPosts as $post): ?>
-            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                    <h3 class="text-sm font-medium text-gray-900">
-                        <a href="../post.php?slug=<?php echo htmlspecialchars($post['slug']); ?>" class="hover:underline">
-                            <?php echo htmlspecialchars($post['title']); ?>
-                        </a>
-                    </h3>
-                    <p class="text-sm text-gray-500">
-                        by <?php echo htmlspecialchars($post['username']); ?> • 
-                        <?php echo date('M j, Y', strtotime($post['created_at'])); ?>
-                    </p>
-                </div>
-                <a href="posts.php?action=edit&id=<?php echo $post['id']; ?>" class="text-indigo-600 hover:text-indigo-900">
-                    Edit
-                </a>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <div class="mt-4">
-            <a href="posts.php" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                View all posts →
-            </a>
-        </div>
+    <button class="debug-toggle" onclick="toggleDebug()">Show Debug</button>
+    <div id="debugInfo" class="debug-info">
+        <strong>Debug Information:</strong>
+        <?php
+        if (isset($_SESSION['debug'])) {
+            echo '<pre>';
+            print_r($_SESSION['debug']);
+            echo '</pre>';
+        }
+        ?>
     </div>
-
-    <!-- Recent Comments -->
-    <div class="p-4 bg-white border rounded-lg shadow-sm">
-        <h2 class="text-xl font-semibold text-gray-900">Recent Comments</h2>
-        <div class="mt-4 space-y-4">
-            <?php foreach ($recentComments as $comment): ?>
-            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                    <h3 class="text-sm font-medium text-gray-900">
-                        <?php echo htmlspecialchars($comment['author_name']); ?>
-                        on
-                        <a href="../post.php?slug=<?php echo htmlspecialchars($comment['post_title']); ?>" class="hover:underline">
-                            <?php echo htmlspecialchars($comment['post_title']); ?>
-                        </a>
-                    </h3>
-                    <p class="text-sm text-gray-500">
-                        <?php echo date('M j, Y', strtotime($comment['created_at'])); ?> •
-                        <span class="capitalize"><?php echo $comment['status']; ?></span>
-                    </p>
-                </div>
-                <a href="comments.php?action=edit&id=<?php echo $comment['id']; ?>" class="text-indigo-600 hover:text-indigo-900">
-                    Review
-                </a>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <div class="mt-4">
-            <a href="comments.php" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                View all comments →
-            </a>
-        </div>
-    </div>
-</div>
-
-<?php require_once './includes/footer.php'; ?> 
+    <script>
+        function toggleDebug() {
+            const debugInfo = document.getElementById('debugInfo');
+            const toggleButton = document.querySelector('.debug-toggle');
+            if (debugInfo.classList.contains('visible')) {
+                debugInfo.classList.remove('visible');
+                toggleButton.textContent = 'Show Debug';
+            } else {
+                debugInfo.classList.add('visible');
+                toggleButton.textContent = 'Hide Debug';
+            }
+        }
+    </script>
+</body>
+</html> 

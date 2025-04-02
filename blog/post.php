@@ -48,6 +48,42 @@ require_once 'vendor/autoload.php';
 $parsedown = new Parsedown();
 $parsedown->setSafeMode(true);
 $content = $parsedown->text($post['content']);
+
+// Get post tags
+$tags_query = "SELECT t.* 
+               FROM tags t 
+               JOIN post_tags pt ON t.id = pt.tag_id 
+               WHERE pt.post_id = ?";
+$stmt = $db->prepare($tags_query);
+$stmt->bind_param("i", $post['id']);
+$stmt->execute();
+$tags_result = $stmt->get_result();
+$tags = $tags_result->fetch_all(MYSQLI_ASSOC);
+
+// Get comments
+$comments_query = "SELECT c.*, u.username as author_name, u.avatar as author_avatar 
+                  FROM comments c 
+                  LEFT JOIN users u ON c.user_id = u.id 
+                  WHERE c.post_id = ? AND c.status = 'approved' 
+                  ORDER BY c.created_at DESC";
+$stmt = $db->prepare($comments_query);
+$stmt->bind_param("i", $post['id']);
+$stmt->execute();
+$comments_result = $stmt->get_result();
+$comments = $comments_result->fetch_all(MYSQLI_ASSOC);
+
+// Get related posts
+$related_query = "SELECT p.*, c.name as category_name 
+                 FROM posts p 
+                 LEFT JOIN categories c ON p.category_id = c.id 
+                 WHERE p.category_id = ? AND p.id != ? AND p.status = 'published' 
+                 ORDER BY p.created_at DESC 
+                 LIMIT 3";
+$stmt = $db->prepare($related_query);
+$stmt->bind_param("ii", $post['category_id'], $post['id']);
+$stmt->execute();
+$related_result = $stmt->get_result();
+$related_posts = $related_result->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>

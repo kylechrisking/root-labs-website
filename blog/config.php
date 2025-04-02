@@ -12,8 +12,8 @@ define('ADMIN_EMAIL', 'admin@rootlabs.us');
 
 // Database Settings
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'blog');
-define('DB_USER', 'admin');
+define('DB_NAME', 'rootlabs_blog');
+define('DB_USER', 'rootlabs_blog');
 define('DB_PASS', 'Cub!cJawb0ne');
 
 // Blog Settings
