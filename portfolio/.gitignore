@@ -1,0 +1,39 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Configuration files with sensitive data
+includes/config.php
+includes/.env
+
+# Database files
+*.sql
+*.sqlite
+
+# Log files
+*.log
+logs/
+error_log
+
+# Cache files
+cache/
+*.cache
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Dependency directories
+vendor/
+node_modules/
+
+# Temporary files
+tmp/
+temp/ 

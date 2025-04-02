@@ -1,0 +1,49 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Base directory
+RewriteBase /blog/
+
+# Redirect to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect config files
+<FilesMatch "^(config\.php|config\.example\.php|schema\.sql|.*\.env)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to system files
+RedirectMatch 403 /\..*$
+RedirectMatch 403 /includes/?$
+
+# Clean URLs for posts
+RewriteRule ^post/([a-zA-Z0-9-]+)/?$ post.php?slug=$1 [L,QSA]
+RewriteRule ^category/([a-zA-Z0-9-]+)/?$ index.php?category=$1 [L,QSA]
+RewriteRule ^tag/([a-zA-Z0-9-]+)/?$ index.php?tag=$1 [L,QSA]
+RewriteRule ^author/([a-zA-Z0-9-]+)/?$ index.php?author=$1 [L,QSA]
+
+# Custom error pages
+ErrorDocument 404 /blog/404.php
+ErrorDocument 500 /blog/500.php
+ErrorDocument 403 /blog/error.php
+
+# PHP settings
+php_value upload_max_filesize 5M
+php_value post_max_size 6M
+php_value max_execution_time 300
+php_value max_input_time 300
+
+# Security headers
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-XSS-Protection "1; mode=block"
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'" 

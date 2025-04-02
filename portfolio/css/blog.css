@@ -1,0 +1,394 @@
+/* Portfolio Blog Styles */
+.portfolio-section {
+    /* Blog Layout */
+    .blog-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 1rem 2rem;
+        background: var(--bg-color);
+        border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+    }
+
+    .blog-content {
+        max-width: 800px;
+        margin: 100px auto;
+        padding: 0 20px;
+    }
+
+    .blog-header {
+        text-align: center;
+        margin-bottom: 4rem;
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+    }
+
+    /* Post Cards */
+    .post-card {
+        background: var(--card-bg);
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: translateY(-5px);
+        }
+
+        time {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+        }
+
+        h2 {
+            margin: 0.5rem 0 1rem;
+            font-size: 1.8rem;
+            color: var(--text-color);
+        }
+    }
+
+    .post-excerpt {
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+        color: var(--text-color);
+    }
+
+    /* Post Tags */
+    .post-tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin: 1rem 0;
+    }
+
+    .post-tag {
+        background: var(--accent-color);
+        color: white;
+        padding: 0.2rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    /* Read More Link */
+    .read-more {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: gap 0.3s ease;
+
+        &:hover {
+            gap: 0.8rem;
+        }
+    }
+
+    /* Full Post View */
+    .post-full {
+        background: var(--card-bg);
+        border-radius: 10px;
+        padding: 3rem;
+    }
+
+    .post-header {
+        text-align: center;
+        margin-bottom: 3rem;
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 1rem 0;
+            color: var(--text-color);
+        }
+    }
+
+    .post-body {
+        line-height: 1.8;
+        font-size: 1.1rem;
+        color: var(--text-color);
+
+        h2 {
+            margin: 2rem 0 1rem;
+            color: var(--text-color);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin: 2rem 0;
+        }
+
+        code {
+            background: rgba(138, 43, 226, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+    }
+
+    /* Search and Filters */
+    .search-form {
+        margin: 2rem 0;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+
+        input {
+            padding: 0.8rem 1.2rem;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 25px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        button {
+            padding: 0.8rem 1.5rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+    }
+
+    .tags-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+        margin: 1rem 0 2rem;
+    }
+
+    .tag-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        background: var(--card-bg);
+        color: var(--text-color);
+        text-decoration: none;
+        transition: all 0.3s ease;
+
+        &:hover,
+        &.active {
+            background: var(--accent-color);
+            color: white;
+        }
+    }
+
+    .tag-count {
+        font-size: 0.8rem;
+        opacity: 0.8;
+    }
+
+    .filter-info {
+        background: var(--card-bg);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .clear-filters {
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+
+    /* Pagination */
+    .pagination {
+        margin-top: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .page-numbers {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .page-number,
+    .prev-page,
+    .next-page {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.5rem;
+        height: 2.5rem;
+        padding: 0 0.8rem;
+        border-radius: 5px;
+        background: var(--card-bg);
+        color: var(--text-color);
+        text-decoration: none;
+        transition: all 0.3s ease;
+
+        &:hover,
+        &.active {
+            background: var(--accent-color);
+            color: white;
+        }
+    }
+
+    .page-ellipsis {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.5rem;
+        height: 2.5rem;
+        opacity: 0.5;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .blog-content {
+            margin: 80px auto;
+            padding: 0 1rem;
+        }
+
+        .post-card {
+            padding: 1.5rem;
+        }
+
+        .post-full {
+            padding: 2rem;
+        }
+
+        .post-header h1 {
+            font-size: 2rem;
+        }
+    }
+}
+
+/* Blog Integration Styles */
+.blog-preview {
+    padding: 2rem 0;
+}
+
+.blog-preview-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.blog-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.blog-preview-card {
+    background: var(--background-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.blog-preview-card:hover {
+    transform: translateY(-4px);
+}
+
+.blog-preview-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.blog-preview-content {
+    padding: 1.5rem;
+}
+
+.blog-preview-date {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.blog-preview-heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.blog-preview-excerpt {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.blog-preview-link {
+    display: inline-block;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.blog-preview-link:hover {
+    color: var(--primary-dark);
+}
+
+.blog-view-all {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.blog-view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.blog-view-all-link:hover {
+    background: var(--primary-dark);
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .blog-preview-card {
+        background: var(--background-dark);
+    }
+} 

@@ -1,0 +1,33 @@
+# Environment variables and configuration
+.env
+.env.*
+config/local.php
+
+# Sensitive files
+includes/config.local.php
+
+# Cache and temporary files
+cache/*
+tmp/*
+*.cache
+
+# Log files
+*.log
+error_log
+logs/*
+
+# User uploaded content
+uploads/*
+!uploads/.gitkeep
+
+# Vendor dependencies
+vendor/*
+node_modules/*
+
+# IDE and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db 

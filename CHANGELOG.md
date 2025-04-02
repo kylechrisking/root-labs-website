@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Blog database setup with MariaDB
+- Initial schema import with users and categories
+- PHP mysqli extension installation
+- Apache mod_headers module configuration
+
+### Changed
+- Separated blog and portfolio CSS files
+- Updated .htaccess configurations
+- Reorganized file structure for better separation
+
+### Known Issues (To Be Fixed)
+- Portfolio styles not loading properly (CSS not being applied)
+- Blog returning 500 error on main page
+- Apache header configuration needs review
+- File permissions may need adjustment
+
 ## [1.2.0] - 2024-04-01
 ### Added
 - Personal portfolio section integrated into the website

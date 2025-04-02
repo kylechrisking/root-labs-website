@@ -1,0 +1,187 @@
+/* Admin Panel Custom Styles */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Form styles */
+.form-input {
+    @apply block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-indigo-400 focus:outline-none focus:shadow-outline-indigo dark:text-gray-300 dark:focus:shadow-outline-gray form-input;
+}
+
+.form-textarea {
+    @apply block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-textarea focus:border-indigo-400 focus:outline-none focus:shadow-outline-indigo dark:focus:shadow-outline-gray;
+}
+
+.form-select {
+    @apply block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-indigo-400 focus:outline-none focus:shadow-outline-indigo dark:focus:shadow-outline-gray;
+}
+
+/* Button styles */
+.btn {
+    @apply px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-transparent rounded-lg focus:outline-none;
+}
+
+.btn-primary {
+    @apply bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700;
+}
+
+.btn-secondary {
+    @apply bg-gray-600 hover:bg-gray-700 focus:border-gray-700 active:bg-gray-700;
+}
+
+.btn-danger {
+    @apply bg-red-600 hover:bg-red-700 focus:border-red-700 active:bg-red-700;
+}
+
+.btn-success {
+    @apply bg-green-600 hover:bg-green-700 focus:border-green-700 active:bg-green-700;
+}
+
+/* Card styles */
+.card {
+    @apply bg-white rounded-lg shadow-md dark:bg-gray-800;
+}
+
+.card-header {
+    @apply px-4 py-3 border-b dark:border-gray-700;
+}
+
+.card-body {
+    @apply p-4;
+}
+
+.card-footer {
+    @apply px-4 py-3 border-t dark:border-gray-700;
+}
+
+/* Table styles */
+.table {
+    @apply w-full whitespace-no-wrap;
+}
+
+.table-header {
+    @apply text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800;
+}
+
+.table-row {
+    @apply text-gray-700 dark:text-gray-400;
+}
+
+.table-row:not(:last-child) {
+    @apply border-b dark:border-gray-700;
+}
+
+.table-cell {
+    @apply px-4 py-3;
+}
+
+/* Badge styles */
+.badge {
+    @apply px-2 py-1 text-xs font-medium leading-tight text-white rounded-full;
+}
+
+.badge-success {
+    @apply bg-green-500;
+}
+
+.badge-warning {
+    @apply bg-yellow-500;
+}
+
+.badge-danger {
+    @apply bg-red-500;
+}
+
+.badge-info {
+    @apply bg-blue-500;
+}
+
+/* Markdown preview */
+.markdown-preview {
+    @apply prose dark:prose-dark max-w-none;
+}
+
+/* Image preview */
+.image-preview {
+    @apply max-w-xs rounded-lg shadow-md;
+}
+
+/* Tag input */
+.tag-container {
+    @apply flex flex-wrap gap-2 p-2 border rounded-md;
+}
+
+.tag-input {
+    @apply w-full p-1 text-sm border-none focus:outline-none;
+}
+
+/* Custom transitions */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+    .mobile-hidden {
+        display: none;
+    }
+}
+
+@media (min-width: 641px) {
+    .desktop-hidden {
+        display: none;
+    }
+}
+
+/* Dark mode overrides */
+.dark {
+    @apply bg-gray-900 text-gray-100;
+}
+
+.dark .card {
+    @apply bg-gray-800 border-gray-700;
+}
+
+.dark .table-header {
+    @apply bg-gray-800 text-gray-400 border-gray-700;
+}
+
+.dark .table-row {
+    @apply text-gray-400 border-gray-700;
+}
+
+/* Loading states */
+.loading {
+    @apply opacity-75 pointer-events-none;
+}
+
+.loading-spinner {
+    @apply animate-spin h-5 w-5 text-white;
+}
+
+/* Focus styles */
+.focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+} 

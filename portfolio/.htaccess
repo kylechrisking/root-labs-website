@@ -1,0 +1,25 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Base directory
+RewriteBase /portfolio/
+
+# Set content types
+AddType text/html .php
+AddType text/css .css
+AddType application/javascript .js
+
+# Enable CORS for assets
+<FilesMatch "\.(css|js)$">
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Custom error pages
+ErrorDocument 404 /portfolio/404.html
+ErrorDocument 500 /portfolio/500.html 
