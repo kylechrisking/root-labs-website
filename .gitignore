@@ -5,6 +5,7 @@
 
 # Configuration files
 blog/includes/config.php
+blog/setup_db.php
 
 # Database files
 *.sql
